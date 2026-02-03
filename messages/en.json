@@ -1,0 +1,454 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "back": "Back",
+    "logout": "Logout",
+    "or": "or",
+    "yes": "Yes",
+    "no": "No",
+    "unknown": "Unknown"
+  },
+  "location": {
+    "radiusLabel": "Discovery Radius",
+    "setLocation": "Set my location",
+    "useMyLocation": "Use my location",
+    "updateLocation": "Update",
+    "locationSet": "Location set",
+    "noLocation": "No location set",
+    "clickMapOrButton": "Click map or use button",
+    "loadingMap": "Loading map...",
+    "radiusHint": "You will see pets within {radius} km of your location",
+    "permissionRequired": "Location Permission Required",
+    "enableLocationInBrowser": "Please enable location access in your browser settings to use your current location.",
+    "orClickOnMap": "Or click anywhere on the map to set your location manually.",
+    "errors": {
+      "notSupported": "Geolocation is not supported by your browser",
+      "permissionDenied": "Location permission denied. Please enable it in your browser settings.",
+      "unavailable": "Location information is unavailable",
+      "timeout": "Location request timed out",
+      "generic": "Unable to get your location",
+      "mapLoadFailed": "Failed to load map. Please try again."
+    }
+  },
+  "upload": {
+    "clickToSelect": "Click to select",
+    "uploadButton": "Upload",
+    "cancelButton": "Cancel",
+    "changeButton": "Change",
+    "addPhoto": "Add photo",
+    "dragOrClick": "Drag & drop or click to browse",
+    "dragOrClickPhoto": "Drag & drop an image or click to browse",
+    "dropHere": "Drop your image here",
+    "changePhoto": "Change photo",
+    "allowedFormats": "JPEG, PNG or WebP (max 5MB)",
+    "uploading": "Uploading...",
+    "avatarSuccess": "Avatar uploaded successfully!",
+    "photoSuccess": "Photo uploaded successfully!",
+    "photoRemoved": "Photo removed successfully!",
+    "errors": {
+      "invalidType": "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
+      "tooLarge": "File too large. Maximum size is {maxSize}MB.",
+      "uploadFailed": "Upload failed. Please try again.",
+      "maxPhotos": "Maximum {max} photos allowed."
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "discover": "Discover",
+    "myPets": "My Pets",
+    "matches": "Matches",
+    "profile": "Profile",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "landing": {
+    "hero": {
+      "title": "Find Your Perfect Pet Match",
+      "subtitle": "Connect with adorable pets looking for their forever home. Swipe, match, and adopt your new best friend.",
+      "cta": {
+        "getStarted": "Get Started",
+        "login": "I already have an account"
+      }
+    },
+    "features": {
+      "title": "Why Choose Petder?",
+      "match": {
+        "title": "Smart Matching",
+        "description": "Our algorithm finds pets that match your lifestyle and preferences."
+      },
+      "verified": {
+        "title": "Verified Shelters",
+        "description": "All our partner shelters are verified and trusted."
+      },
+      "support": {
+        "title": "Adoption Support",
+        "description": "We guide you through every step of the adoption process."
+      }
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to continue to Petder",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submitButton": "Sign In",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Create one"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join Petder and find your perfect pet",
+      "displayNameLabel": "Display Name",
+      "displayNamePlaceholder": "Enter your name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Create a password",
+      "submitButton": "Create Account",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "emailExists": "This email is already registered",
+      "genericError": "Something went wrong. Please try again.",
+      "requiredField": "This field is required",
+      "invalidEmail": "Please enter a valid email",
+      "passwordTooShort": "Password must be at least 8 characters"
+    },
+    "google": {
+      "signIn": "Sign in with Google",
+      "signUp": "Sign up with Google"
+    },
+    "callback": {
+      "loading": "Signing you in...",
+      "error": "Authentication failed. Please try again.",
+      "noToken": "No authentication token received.",
+      "errorTitle": "Oops!",
+      "backToLogin": "Back to Login"
+    }
+  },
+  "discover": {
+    "title": "Discover",
+    "subtitle": "Find your perfect pet match",
+    "loading": "Loading pets...",
+    "empty": {
+      "title": "No more pets nearby",
+      "subtitle": "Check back later for new furry friends!",
+      "refresh": "Refresh"
+    },
+    "noPets": {
+      "title": "Add your pet first!",
+      "subtitle": "You need to add at least one pet before discovering others.",
+      "addPet": "Add My Pet"
+    },
+    "card": {
+      "yearsOld": "{years} years old",
+      "monthsOld": "{months} months old",
+      "ageUnknown": "Age unknown"
+    },
+    "actions": {
+      "pass": "Pass",
+      "like": "Like",
+      "undo": "Undo"
+    },
+    "match": {
+      "title": "It's a Match!",
+      "subtitle": "You and this pet's owner liked each other!",
+      "keepSwiping": "Keep Swiping",
+      "viewMatches": "View Matches"
+    }
+  },
+  "onboarding": {
+    "owner": {
+      "title": "Complete Your Profile",
+      "subtitle": "Tell us a bit about yourself to get started",
+      "displayNameLabel": "Display Name",
+      "displayNamePlaceholder": "Enter your name",
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Tell us about yourself...",
+      "languageLabel": "Preferred Language",
+      "continueButton": "Continue",
+      "avatarLabel": "Avatar",
+      "avatarRequired": "Profile photo is required to continue",
+      "errors": {
+        "displayNameRequired": "Display name is required",
+        "radiusInvalid": "Radius must be between 1 and 200 km",
+        "avatarRequired": "Please upload a profile photo",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
+    "pet": {
+      "title": "Add Your First Pet",
+      "subtitle": "Let's add your furry friend to start discovering matches",
+      "nameLabel": "Pet Name",
+      "namePlaceholder": "Enter pet's name",
+      "speciesLabel": "Species",
+      "speciesPlaceholder": "Select species",
+      "breedLabel": "Breed",
+      "breedPlaceholder": "Enter breed (optional)",
+      "sexLabel": "Sex",
+      "sexOptions": {
+        "unknown": "Unknown",
+        "male": "Male",
+        "female": "Female"
+      },
+      "ageLabel": "Age (months)",
+      "agePlaceholder": "Enter age in months",
+      "sizeLabel": "Size",
+      "sizePlaceholder": "Select size",
+      "sizeOptions": {
+        "xs": "Extra Small",
+        "s": "Small",
+        "m": "Medium",
+        "l": "Large",
+        "xl": "Extra Large"
+      },
+      "energyLabel": "Energy Level",
+      "energyPlaceholder": "Select energy level",
+      "energyOptions": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "temperamentLabel": "Temperament",
+      "temperamentPlaceholder": "friendly, playful, calm (comma separated)",
+      "vaccinatedLabel": "Vaccinated",
+      "neuteredLabel": "Neutered/Spayed",
+      "booleanOptions": {
+        "unknown": "Unknown",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Tell us about your pet...",
+      "photosLabel": "Pet Photos",
+      "photosMinRequired": "Upload at least 2 photos of your pet",
+      "photosCount": "photos uploaded",
+      "photosNeedMore": "need {count} more",
+      "finishButton": "Finish Setup",
+      "errors": {
+        "nameRequired": "Pet name is required",
+        "speciesRequired": "Please select a species",
+        "photosRequired": "Please upload at least 2 photos",
+        "generic": "Something went wrong. Please try again."
+      }
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "Manage your account settings and preferences",
+    "sections": {
+      "avatar": "Profile Photo",
+      "basicInfo": "Basic Information",
+      "location": "Location",
+      "preferences": "Preferences",
+      "privacy": "Privacy",
+      "notifications": "Notifications"
+    },
+    "avatarHint": "Upload a profile photo. Supported formats: JPEG, PNG, WebP. Max size: 5MB.",
+    "displayNameLabel": "Display Name",
+    "displayNamePlaceholder": "Enter your name",
+    "avatarUrlLabel": "Avatar URL",
+    "avatarUrlPlaceholder": "https://example.com/avatar.jpg",
+    "bioLabel": "Bio",
+    "bioPlaceholder": "Tell us about yourself...",
+    "phoneLabel": "Phone Number",
+    "phonePlaceholder": "+1234567890",
+    "countryLabel": "Country",
+    "countryPlaceholder": "Enter your country",
+    "cityLabel": "City",
+    "cityPlaceholder": "Enter your city",
+    "languageLabel": "Preferred Language",
+    "radiusLabel": "Discovery Radius (km)",
+    "radiusPlaceholder": "25",
+    "isProfilePublicLabel": "Make my profile public",
+    "allowMessagesLabel": "Allow messages from other users",
+    "emailNotificationsLabel": "Email notifications",
+    "pushNotificationsLabel": "Push notifications",
+    "success": "Profile updated successfully!",
+    "errors": {
+      "displayNameRequired": "Display name is required",
+      "radiusInvalid": "Radius must be between 1 and 200 km",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "pets": {
+    "create": {
+      "title": "Add a New Pet",
+      "subtitle": "Fill in the details to list a pet for adoption",
+      "nameLabel": "Pet Name",
+      "namePlaceholder": "Enter pet's name",
+      "speciesLabel": "Species",
+      "speciesPlaceholder": "Select species",
+      "speciesOptions": {
+        "dog": "Dog",
+        "cat": "Cat",
+        "other": "Other"
+      },
+      "breedLabel": "Breed",
+      "breedPlaceholder": "Enter breed",
+      "sexLabel": "Sex",
+      "sexOptions": {
+        "unknown": "Unknown",
+        "male": "Male",
+        "female": "Female"
+      },
+      "ageLabel": "Age (months)",
+      "agePlaceholder": "Enter age in months",
+      "sizeLabel": "Size",
+      "sizePlaceholder": "Select size",
+      "sizeOptions": {
+        "xs": "Extra Small",
+        "s": "Small",
+        "m": "Medium",
+        "l": "Large",
+        "xl": "Extra Large"
+      },
+      "energyLabel": "Energy Level",
+      "energyPlaceholder": "Select energy level",
+      "energyOptions": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "temperamentLabel": "Temperament",
+      "temperamentPlaceholder": "friendly, playful, calm (comma separated)",
+      "vaccinatedLabel": "Vaccinated",
+      "neuteredLabel": "Neutered/Spayed",
+      "booleanOptions": {
+        "unknown": "Unknown",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Tell us about this pet...",
+      "photosLabel": "Photos",
+      "photosPlaceholder": "Photo URLs (comma separated, max 6)",
+      "submitButton": "Add Pet",
+      "success": "Pet added successfully!",
+      "breedAIHint": "Tip: Add a photo after creation to detect breed with AI"
+    },
+    "edit": {
+      "title": "Edit Pet",
+      "subtitle": "Update {name}'s information",
+      "success": "Pet updated successfully!",
+      "photosLabel": "Pet Photos",
+      "photosHint": "Upload photos of your pet. Supported formats: JPEG, PNG, WebP. Max size: 5MB.",
+      "removePhoto": "Remove photo",
+      "addFirstPhoto": "Add your pet's first photo",
+      "addMorePhotos": "Add another photo",
+      "maxPhotosReached": "Maximum number of photos reached. Remove a photo to add a new one.",
+      "notFound": {
+        "title": "Pet Not Found",
+        "subtitle": "The pet you're looking for doesn't exist or you don't have access to it."
+      },
+      "errors": {
+        "loadFailed": "Failed to load pet details"
+      }
+    },
+    "list": {
+      "title": "My Pets",
+      "subtitle": "Manage your pets",
+      "addButton": "Add Pet",
+      "activePets": "Active Pets",
+      "inactivePets": "Inactive Pets",
+      "inactive": "Inactive",
+      "editButton": "Edit",
+      "deleteButton": "Delete",
+      "deleteConfirm": "Are you sure you want to deactivate this pet? It will no longer appear in discovery.",
+      "yearsOld": "{years} years old",
+      "monthsOld": "{months} months old",
+      "ageUnknown": "Age unknown",
+      "vaccinated": "Vaccinated",
+      "neutered": "Neutered",
+      "sex": {
+        "male": "Male",
+        "female": "Female",
+        "unknown": "Unknown"
+      },
+      "size": {
+        "xs": "XS",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL"
+      },
+      "energy": {
+        "low": "Low Energy",
+        "medium": "Medium Energy",
+        "high": "High Energy"
+      },
+      "empty": {
+        "title": "No Pets Yet",
+        "subtitle": "Add your first pet to start discovering matches!",
+        "addButton": "Add Your First Pet"
+      },
+      "errors": {
+        "loadFailed": "Failed to load pets",
+        "deleteFailed": "Failed to delete pet"
+      }
+    },
+    "species": {
+      "dog": "Dog",
+      "cat": "Cat",
+      "other": "Other"
+    },
+    "breedAI": {
+      "title": "AI Breed Suggestion",
+      "subtitle": "Let AI detect your pet's breed from the photo",
+      "detectButton": "Detect breed (AI)",
+      "detecting": "Detecting...",
+      "suggestedBreeds": "Suggested breeds",
+      "confidence": "Confidence",
+      "useTopSuggestion": "Use this",
+      "chooseThis": "Choose",
+      "useThis": "Use",
+      "detectAgain": "Detect again",
+      "currentBreed": "Current breed",
+      "notSupported": "AI breed detection is available for dogs and cats only.",
+      "addPhotoFirst": "Add a photo to detect breed with AI.",
+      "noPredictions": "Could not detect breed. Try with a different photo.",
+      "errors": {
+        "detectionFailed": "Breed detection failed. Please try again.",
+        "unsupportedSpecies": "AI breed detection only supports dogs and cats.",
+        "applyFailed": "Failed to update breed. Please try again."
+      }
+    }
+  },
+  "matches": {
+    "title": "My Matches",
+    "empty": {
+      "title": "No matches yet",
+      "subtitle": "Keep swiping to find your matches!",
+      "discover": "Discover Pets"
+    },
+    "matchCard": {
+      "title": "You have a match!"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "loading": "Loading...",
+    "markAllRead": "Mark all as read",
+    "viewAll": "View all notifications",
+    "types": {
+      "match": "New Match",
+      "like": "New Like",
+      "message": "New Message",
+      "system": "System"
+    }
+  }
+}

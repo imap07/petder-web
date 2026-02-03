@@ -1,0 +1,454 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "back": "Volver",
+    "logout": "Cerrar sesión",
+    "or": "o",
+    "yes": "Sí",
+    "no": "No",
+    "unknown": "Desconocido"
+  },
+  "location": {
+    "radiusLabel": "Radio de Descubrimiento",
+    "setLocation": "Establecer ubicacion",
+    "useMyLocation": "Usar mi ubicacion",
+    "updateLocation": "Actualizar",
+    "locationSet": "Ubicacion establecida",
+    "noLocation": "Sin ubicacion",
+    "clickMapOrButton": "Haz clic en el mapa o usa el boton",
+    "loadingMap": "Cargando mapa...",
+    "radiusHint": "Veras mascotas dentro de {radius} km de tu ubicacion",
+    "permissionRequired": "Permiso de Ubicacion Requerido",
+    "enableLocationInBrowser": "Por favor habilita el acceso a la ubicacion en la configuracion de tu navegador.",
+    "orClickOnMap": "O haz clic en cualquier parte del mapa para establecer tu ubicacion manualmente.",
+    "errors": {
+      "notSupported": "La geolocalizacion no es compatible con tu navegador",
+      "permissionDenied": "Permiso de ubicacion denegado. Por favor habilitalo en la configuracion de tu navegador.",
+      "unavailable": "La informacion de ubicacion no esta disponible",
+      "timeout": "La solicitud de ubicacion expiro",
+      "generic": "No se pudo obtener tu ubicacion",
+      "mapLoadFailed": "Error al cargar el mapa. Por favor intenta de nuevo."
+    }
+  },
+  "upload": {
+    "clickToSelect": "Clic para seleccionar",
+    "uploadButton": "Subir",
+    "cancelButton": "Cancelar",
+    "changeButton": "Cambiar",
+    "addPhoto": "Agregar foto",
+    "dragOrClick": "Arrastra o haz clic para buscar",
+    "dragOrClickPhoto": "Arrastra una imagen o haz clic para buscar",
+    "dropHere": "Suelta tu imagen aqui",
+    "changePhoto": "Cambiar foto",
+    "allowedFormats": "JPEG, PNG o WebP (max 5MB)",
+    "uploading": "Subiendo...",
+    "avatarSuccess": "Avatar subido exitosamente!",
+    "photoSuccess": "Foto subida exitosamente!",
+    "photoRemoved": "Foto eliminada exitosamente!",
+    "errors": {
+      "invalidType": "Tipo de archivo no valido. Solo se permiten JPEG, PNG y WebP.",
+      "tooLarge": "Archivo muy grande. El tamano maximo es {maxSize}MB.",
+      "uploadFailed": "Error al subir. Por favor intenta de nuevo.",
+      "maxPhotos": "Maximo {max} fotos permitidas."
+    }
+  },
+  "nav": {
+    "home": "Inicio",
+    "discover": "Descubrir",
+    "myPets": "Mis Mascotas",
+    "matches": "Matches",
+    "profile": "Perfil",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar sesión"
+  },
+  "landing": {
+    "hero": {
+      "title": "Encuentra Tu Mascota Perfecta",
+      "subtitle": "Conecta con adorables mascotas que buscan su hogar para siempre. Desliza, haz match y adopta a tu nuevo mejor amigo.",
+      "cta": {
+        "getStarted": "Comenzar",
+        "login": "Ya tengo una cuenta"
+      }
+    },
+    "features": {
+      "title": "¿Por Qué Elegir Petder?",
+      "match": {
+        "title": "Matching Inteligente",
+        "description": "Nuestro algoritmo encuentra mascotas que se adaptan a tu estilo de vida."
+      },
+      "verified": {
+        "title": "Refugios Verificados",
+        "description": "Todos nuestros refugios asociados están verificados y son confiables."
+      },
+      "support": {
+        "title": "Apoyo en Adopción",
+        "description": "Te guiamos en cada paso del proceso de adopción."
+      }
+    },
+    "footer": {
+      "rights": "Todos los derechos reservados."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bienvenido de Nuevo",
+      "subtitle": "Inicia sesión para continuar en Petder",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "Ingresa tu correo",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "submitButton": "Iniciar Sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "registerLink": "Crear una"
+    },
+    "register": {
+      "title": "Crear Cuenta",
+      "subtitle": "Únete a Petder y encuentra tu mascota perfecta",
+      "displayNameLabel": "Nombre",
+      "displayNamePlaceholder": "Ingresa tu nombre",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "Ingresa tu correo",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Crea una contraseña",
+      "submitButton": "Crear Cuenta",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "loginLink": "Iniciar sesión"
+    },
+    "errors": {
+      "invalidCredentials": "Correo o contraseña inválidos",
+      "emailExists": "Este correo ya está registrado",
+      "genericError": "Algo salió mal. Por favor intenta de nuevo.",
+      "requiredField": "Este campo es obligatorio",
+      "invalidEmail": "Por favor ingresa un correo válido",
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres"
+    },
+    "google": {
+      "signIn": "Iniciar sesión con Google",
+      "signUp": "Registrarse con Google"
+    },
+    "callback": {
+      "loading": "Iniciando sesión...",
+      "error": "La autenticación falló. Por favor intenta de nuevo.",
+      "noToken": "No se recibió token de autenticación.",
+      "errorTitle": "¡Ups!",
+      "backToLogin": "Volver al inicio de sesión"
+    }
+  },
+  "discover": {
+    "title": "Descubrir",
+    "subtitle": "Encuentra tu mascota perfecta",
+    "loading": "Cargando mascotas...",
+    "empty": {
+      "title": "No hay más mascotas cerca",
+      "subtitle": "¡Vuelve más tarde para conocer nuevos amigos peludos!",
+      "refresh": "Actualizar"
+    },
+    "noPets": {
+      "title": "¡Agrega tu mascota primero!",
+      "subtitle": "Necesitas agregar al menos una mascota antes de descubrir otras.",
+      "addPet": "Agregar Mi Mascota"
+    },
+    "card": {
+      "yearsOld": "{years} años",
+      "monthsOld": "{months} meses",
+      "ageUnknown": "Edad desconocida"
+    },
+    "actions": {
+      "pass": "Pasar",
+      "like": "Me gusta",
+      "undo": "Deshacer"
+    },
+    "match": {
+      "title": "¡Es un Match!",
+      "subtitle": "¡Tú y el dueño de esta mascota se gustaron mutuamente!",
+      "keepSwiping": "Seguir Deslizando",
+      "viewMatches": "Ver Matches"
+    }
+  },
+  "onboarding": {
+    "owner": {
+      "title": "Completa Tu Perfil",
+      "subtitle": "Cuéntanos un poco sobre ti para comenzar",
+      "displayNameLabel": "Nombre para Mostrar",
+      "displayNamePlaceholder": "Ingresa tu nombre",
+      "bioLabel": "Biografía",
+      "bioPlaceholder": "Cuéntanos sobre ti...",
+      "languageLabel": "Idioma Preferido",
+      "continueButton": "Continuar",
+      "avatarLabel": "Avatar",
+      "avatarRequired": "Se requiere foto de perfil para continuar",
+      "errors": {
+        "displayNameRequired": "El nombre es obligatorio",
+        "radiusInvalid": "El radio debe estar entre 1 y 200 km",
+        "avatarRequired": "Por favor sube una foto de perfil",
+        "generic": "Algo salió mal. Por favor intenta de nuevo."
+      }
+    },
+    "pet": {
+      "title": "Agrega Tu Primera Mascota",
+      "subtitle": "Agreguemos a tu amigo peludo para empezar a descubrir matches",
+      "nameLabel": "Nombre de la Mascota",
+      "namePlaceholder": "Ingresa el nombre de tu mascota",
+      "speciesLabel": "Especie",
+      "speciesPlaceholder": "Selecciona especie",
+      "breedLabel": "Raza",
+      "breedPlaceholder": "Ingresa la raza (opcional)",
+      "sexLabel": "Sexo",
+      "sexOptions": {
+        "unknown": "Desconocido",
+        "male": "Macho",
+        "female": "Hembra"
+      },
+      "ageLabel": "Edad (meses)",
+      "agePlaceholder": "Ingresa la edad en meses",
+      "sizeLabel": "Tamaño",
+      "sizePlaceholder": "Selecciona tamaño",
+      "sizeOptions": {
+        "xs": "Extra Pequeño",
+        "s": "Pequeño",
+        "m": "Mediano",
+        "l": "Grande",
+        "xl": "Extra Grande"
+      },
+      "energyLabel": "Nivel de Energía",
+      "energyPlaceholder": "Selecciona nivel de energía",
+      "energyOptions": {
+        "low": "Bajo",
+        "medium": "Medio",
+        "high": "Alto"
+      },
+      "temperamentLabel": "Temperamento",
+      "temperamentPlaceholder": "amigable, juguetón, tranquilo (separados por coma)",
+      "vaccinatedLabel": "Vacunado",
+      "neuteredLabel": "Esterilizado",
+      "booleanOptions": {
+        "unknown": "Desconocido",
+        "yes": "Sí",
+        "no": "No"
+      },
+      "bioLabel": "Biografía",
+      "bioPlaceholder": "Cuéntanos sobre tu mascota...",
+      "photosLabel": "Fotos de la Mascota",
+      "photosMinRequired": "Sube al menos 2 fotos de tu mascota",
+      "photosCount": "fotos subidas",
+      "photosNeedMore": "necesitas {count} más",
+      "finishButton": "Finalizar Configuración",
+      "errors": {
+        "nameRequired": "El nombre de la mascota es obligatorio",
+        "speciesRequired": "Por favor selecciona una especie",
+        "photosRequired": "Por favor sube al menos 2 fotos",
+        "generic": "Algo salió mal. Por favor intenta de nuevo."
+      }
+    }
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "subtitle": "Administra tu cuenta y preferencias",
+    "sections": {
+      "avatar": "Foto de Perfil",
+      "basicInfo": "Información Básica",
+      "location": "Ubicación",
+      "preferences": "Preferencias",
+      "privacy": "Privacidad",
+      "notifications": "Notificaciones"
+    },
+    "avatarHint": "Sube una foto de perfil. Formatos soportados: JPEG, PNG, WebP. Tamano maximo: 5MB.",
+    "displayNameLabel": "Nombre para Mostrar",
+    "displayNamePlaceholder": "Ingresa tu nombre",
+    "avatarUrlLabel": "URL del Avatar",
+    "avatarUrlPlaceholder": "https://ejemplo.com/avatar.jpg",
+    "bioLabel": "Biografía",
+    "bioPlaceholder": "Cuéntanos sobre ti...",
+    "phoneLabel": "Número de Teléfono",
+    "phonePlaceholder": "+1234567890",
+    "countryLabel": "País",
+    "countryPlaceholder": "Ingresa tu país",
+    "cityLabel": "Ciudad",
+    "cityPlaceholder": "Ingresa tu ciudad",
+    "languageLabel": "Idioma Preferido",
+    "radiusLabel": "Radio de Descubrimiento (km)",
+    "radiusPlaceholder": "25",
+    "isProfilePublicLabel": "Hacer mi perfil público",
+    "allowMessagesLabel": "Permitir mensajes de otros usuarios",
+    "emailNotificationsLabel": "Notificaciones por correo",
+    "pushNotificationsLabel": "Notificaciones push",
+    "success": "¡Perfil actualizado exitosamente!",
+    "errors": {
+      "displayNameRequired": "El nombre es obligatorio",
+      "radiusInvalid": "El radio debe estar entre 1 y 200 km",
+      "generic": "Algo salió mal. Por favor intenta de nuevo."
+    }
+  },
+  "pets": {
+    "create": {
+      "title": "Agregar Nueva Mascota",
+      "subtitle": "Completa los detalles para publicar una mascota en adopción",
+      "nameLabel": "Nombre de la Mascota",
+      "namePlaceholder": "Ingresa el nombre",
+      "speciesLabel": "Especie",
+      "speciesPlaceholder": "Selecciona especie",
+      "speciesOptions": {
+        "dog": "Perro",
+        "cat": "Gato",
+        "other": "Otro"
+      },
+      "breedLabel": "Raza",
+      "breedPlaceholder": "Ingresa la raza",
+      "sexLabel": "Sexo",
+      "sexOptions": {
+        "unknown": "Desconocido",
+        "male": "Macho",
+        "female": "Hembra"
+      },
+      "ageLabel": "Edad (meses)",
+      "agePlaceholder": "Ingresa la edad en meses",
+      "sizeLabel": "Tamaño",
+      "sizePlaceholder": "Selecciona tamaño",
+      "sizeOptions": {
+        "xs": "Extra Pequeño",
+        "s": "Pequeño",
+        "m": "Mediano",
+        "l": "Grande",
+        "xl": "Extra Grande"
+      },
+      "energyLabel": "Nivel de Energía",
+      "energyPlaceholder": "Selecciona nivel de energía",
+      "energyOptions": {
+        "low": "Bajo",
+        "medium": "Medio",
+        "high": "Alto"
+      },
+      "temperamentLabel": "Temperamento",
+      "temperamentPlaceholder": "amigable, juguetón, tranquilo (separados por coma)",
+      "vaccinatedLabel": "Vacunado",
+      "neuteredLabel": "Esterilizado",
+      "booleanOptions": {
+        "unknown": "Desconocido",
+        "yes": "Sí",
+        "no": "No"
+      },
+      "bioLabel": "Biografía",
+      "bioPlaceholder": "Cuéntanos sobre esta mascota...",
+      "photosLabel": "Fotos",
+      "photosPlaceholder": "URLs de fotos (separadas por coma, máx 6)",
+      "submitButton": "Agregar Mascota",
+      "success": "¡Mascota agregada exitosamente!",
+      "breedAIHint": "Tip: Agrega una foto después de crear para detectar la raza con IA"
+    },
+    "edit": {
+      "title": "Editar Mascota",
+      "subtitle": "Actualizar información de {name}",
+      "success": "¡Mascota actualizada exitosamente!",
+      "photosLabel": "Fotos de la Mascota",
+      "photosHint": "Sube fotos de tu mascota. Formatos soportados: JPEG, PNG, WebP. Tamano maximo: 5MB.",
+      "removePhoto": "Eliminar foto",
+      "addFirstPhoto": "Agrega la primera foto de tu mascota",
+      "addMorePhotos": "Agregar otra foto",
+      "maxPhotosReached": "Numero maximo de fotos alcanzado. Elimina una foto para agregar una nueva.",
+      "notFound": {
+        "title": "Mascota No Encontrada",
+        "subtitle": "La mascota que buscas no existe o no tienes acceso a ella."
+      },
+      "errors": {
+        "loadFailed": "Error al cargar los detalles de la mascota"
+      }
+    },
+    "list": {
+      "title": "Mis Mascotas",
+      "subtitle": "Administra tus mascotas",
+      "addButton": "Agregar Mascota",
+      "activePets": "Mascotas Activas",
+      "inactivePets": "Mascotas Inactivas",
+      "inactive": "Inactiva",
+      "editButton": "Editar",
+      "deleteButton": "Eliminar",
+      "deleteConfirm": "¿Estás seguro de que quieres desactivar esta mascota? Ya no aparecerá en el descubrimiento.",
+      "yearsOld": "{years} años",
+      "monthsOld": "{months} meses",
+      "ageUnknown": "Edad desconocida",
+      "vaccinated": "Vacunado",
+      "neutered": "Esterilizado",
+      "sex": {
+        "male": "Macho",
+        "female": "Hembra",
+        "unknown": "Desconocido"
+      },
+      "size": {
+        "xs": "XS",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL"
+      },
+      "energy": {
+        "low": "Baja Energía",
+        "medium": "Energía Media",
+        "high": "Alta Energía"
+      },
+      "empty": {
+        "title": "Sin Mascotas Aún",
+        "subtitle": "¡Agrega tu primera mascota para empezar a descubrir matches!",
+        "addButton": "Agregar Tu Primera Mascota"
+      },
+      "errors": {
+        "loadFailed": "Error al cargar mascotas",
+        "deleteFailed": "Error al eliminar mascota"
+      }
+    },
+    "species": {
+      "dog": "Perro",
+      "cat": "Gato",
+      "other": "Otro"
+    },
+    "breedAI": {
+      "title": "Sugerencia de Raza con IA",
+      "subtitle": "Deja que la IA detecte la raza de tu mascota desde la foto",
+      "detectButton": "Detectar raza (IA)",
+      "detecting": "Detectando...",
+      "suggestedBreeds": "Razas sugeridas",
+      "confidence": "Confianza",
+      "useTopSuggestion": "Usar esta",
+      "chooseThis": "Elegir",
+      "useThis": "Usar",
+      "detectAgain": "Detectar de nuevo",
+      "currentBreed": "Raza actual",
+      "notSupported": "La detección de raza con IA solo está disponible para perros y gatos.",
+      "addPhotoFirst": "Agrega una foto para detectar la raza con IA.",
+      "noPredictions": "No se pudo detectar la raza. Intenta con otra foto.",
+      "errors": {
+        "detectionFailed": "La detección de raza falló. Por favor intenta de nuevo.",
+        "unsupportedSpecies": "La detección de raza con IA solo soporta perros y gatos.",
+        "applyFailed": "Error al actualizar la raza. Por favor intenta de nuevo."
+      }
+    }
+  },
+  "matches": {
+    "title": "Mis Matches",
+    "empty": {
+      "title": "Aún no tienes matches",
+      "subtitle": "¡Sigue deslizando para encontrar tus matches!",
+      "discover": "Descubrir Mascotas"
+    },
+    "matchCard": {
+      "title": "¡Tienes un match!"
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "No hay notificaciones aún",
+    "loading": "Cargando...",
+    "markAllRead": "Marcar todo como leído",
+    "viewAll": "Ver todas las notificaciones",
+    "types": {
+      "match": "Nuevo Match",
+      "like": "Nuevo Me Gusta",
+      "message": "Nuevo Mensaje",
+      "system": "Sistema"
+    }
+  }
+}
