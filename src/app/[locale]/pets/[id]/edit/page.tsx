@@ -272,6 +272,16 @@ function EditPetContent({ id }: { id: string }) {
                 { value: '', label: tCreate('speciesPlaceholder') },
                 { value: 'dog', label: tPets('species.dog') },
                 { value: 'cat', label: tPets('species.cat') },
+                { value: 'rabbit', label: tPets('species.rabbit') },
+                { value: 'bird', label: tPets('species.bird') },
+                { value: 'fish', label: tPets('species.fish') },
+                { value: 'hamster', label: tPets('species.hamster') },
+                { value: 'guinea_pig', label: tPets('species.guinea_pig') },
+                { value: 'turtle', label: tPets('species.turtle') },
+                { value: 'snake', label: tPets('species.snake') },
+                { value: 'lizard', label: tPets('species.lizard') },
+                { value: 'ferret', label: tPets('species.ferret') },
+                { value: 'horse', label: tPets('species.horse') },
                 { value: 'other', label: tPets('species.other') },
               ]}
               required

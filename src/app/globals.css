@@ -88,6 +88,11 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Safe area for iOS devices with notch/home indicator */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 @layer base {
   html {
     @apply antialiased;

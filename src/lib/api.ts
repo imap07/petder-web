@@ -8,17 +8,22 @@ import type {
   UpdatePetData,
   SwipeData,
   SwipeResponse,
-  Match,
   OwnerProfile,
   UpdateOwnerProfileData,
   UploadResponse,
   Notification,
+  NotificationFeedResponse,
   UnreadCountResponse,
   RecognizeBreedRequest,
   RecognizeBreedResponse,
+  ConversationsListResponse,
+  MessagesListResponse,
+  ChatMessage,
+  SendMessageData,
+  ApiMatchResponse,
 } from '@/types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5051';
 
 export class ApiError extends Error {
   constructor(
@@ -54,10 +59,16 @@ async function request<T>(
   return response.json();
 }
 
-function getAuthHeaders(token: string): HeadersInit {
-  return {
+function getAuthHeaders(token: string, activePetId?: string | null): HeadersInit {
+  const headers: HeadersInit = {
     Authorization: `Bearer ${token}`,
   };
+  
+  if (activePetId) {
+    headers['X-Active-Pet-Id'] = activePetId;
+  }
+  
+  return headers;
 }
 
 export const api = {
@@ -110,8 +121,9 @@ export const api = {
       });
     },
 
-    getMyPets: (token: string): Promise<Pet[]> => {
-      return request<Pet[]>('/pets/me', {
+    getMyPets: (token: string, includeDeleted = false): Promise<Pet[]> => {
+      const query = includeDeleted ? '?includeDeleted=true' : '';
+      return request<Pet[]>(`/pets/me${query}`, {
         method: 'GET',
         headers: getAuthHeaders(token),
       });
@@ -132,43 +144,95 @@ export const api = {
       });
     },
 
-    delete: (token: string, id: string): Promise<Pet> => {
+    /**
+     * Activate a pet - makes it visible in discovery again.
+     * Cannot activate deleted pets.
+     */
+    activate: (token: string, id: string): Promise<Pet> => {
+      return request<Pet>(`/pets/${id}/activate`, {
+        method: 'PATCH',
+        headers: getAuthHeaders(token),
+      });
+    },
+
+    /**
+     * Deactivate a pet - hides from discovery but keeps in owner's list.
+     * Can be reactivated later.
+     */
+    deactivate: (token: string, id: string): Promise<Pet> => {
+      return request<Pet>(`/pets/${id}/deactivate`, {
+        method: 'PATCH',
+        headers: getAuthHeaders(token),
+      });
+    },
+
+    /**
+     * Soft delete a pet - FINAL action, cannot be undone.
+     * Pet will be hidden from discovery, matches, and swipes.
+     */
+    delete: (token: string, id: string, reason?: string): Promise<Pet> => {
       return request<Pet>(`/pets/${id}`, {
         method: 'DELETE',
         headers: getAuthHeaders(token),
+        body: reason ? JSON.stringify({ reason }) : undefined,
       });
     },
   },
 
   discovery: {
-    getFeed: (token: string, limit: number = 20): Promise<Pet[]> => {
+    /**
+     * Get discovery feed for the active pet.
+     * @param token - Auth token
+     * @param activePetId - The pet browsing the feed (required by backend)
+     * @param limit - Max number of pets to return
+     */
+    getFeed: (token: string, activePetId: string | null, limit: number = 20): Promise<Pet[]> => {
       return request<Pet[]>(`/discovery?limit=${limit}`, {
         method: 'GET',
-        headers: getAuthHeaders(token),
+        headers: getAuthHeaders(token, activePetId),
       });
     },
   },
 
   swipes: {
-    swipe: (token: string, data: SwipeData): Promise<SwipeResponse> => {
+    /**
+     * Swipe on a pet as the active pet.
+     * @param token - Auth token
+     * @param activePetId - The pet performing the swipe
+     * @param data - Swipe data (toPetId, action)
+     */
+    swipe: (token: string, activePetId: string | null, data: SwipeData): Promise<SwipeResponse> => {
       return request<SwipeResponse>('/swipes', {
         method: 'POST',
-        headers: getAuthHeaders(token),
+        headers: getAuthHeaders(token, activePetId),
         body: JSON.stringify(data),
       });
     },
 
-    undo: (token: string): Promise<{ success: boolean; undoneSwipePetId?: string }> => {
+    /**
+     * Undo the last swipe for the active pet.
+     * @param token - Auth token
+     * @param activePetId - The pet to undo the last swipe for
+     */
+    undo: (token: string, activePetId: string | null): Promise<{ success: boolean; undoneSwipePetId?: string }> => {
       return request<{ success: boolean; undoneSwipePetId?: string }>('/swipes/undo', {
         method: 'DELETE',
-        headers: getAuthHeaders(token),
+        headers: getAuthHeaders(token, activePetId),
       });
     },
   },
 
   matches: {
-    getMyMatches: (token: string): Promise<Match[]> => {
-      return request<Match[]>('/matches', {
+    getMyMatches: (
+      token: string,
+      options?: { limit?: number; cursor?: string }
+    ): Promise<{ items: ApiMatchResponse[]; nextCursor: string | null; totalCount: number }> => {
+      const params = new URLSearchParams();
+      if (options?.limit) params.append('limit', options.limit.toString());
+      if (options?.cursor) params.append('cursor', options.cursor);
+      const queryString = params.toString();
+      const url = `/matches${queryString ? `?${queryString}` : ''}`;
+      return request<{ items: ApiMatchResponse[]; nextCursor: string | null; totalCount: number }>(url, {
         method: 'GET',
         headers: getAuthHeaders(token),
       });
@@ -238,6 +302,27 @@ export const api = {
   },
 
   notifications: {
+    /**
+     * Get notifications with cursor-based pagination
+     */
+    getFeed: (
+      token: string,
+      options?: { cursor?: string; limit?: number }
+    ): Promise<NotificationFeedResponse> => {
+      const params = new URLSearchParams();
+      if (options?.cursor) params.append('cursor', options.cursor);
+      if (options?.limit) params.append('limit', options.limit.toString());
+      const query = params.toString() ? `?${params.toString()}` : '';
+
+      return request<NotificationFeedResponse>(`/notifications/feed${query}`, {
+        method: 'GET',
+        headers: getAuthHeaders(token),
+      });
+    },
+
+    /**
+     * Get all notifications (legacy, for backward compatibility)
+     */
     getAll: (token: string, limit?: number): Promise<Notification[]> => {
       const query = limit ? `?limit=${limit}` : '';
       return request<Notification[]>(`/notifications${query}`, {
@@ -262,14 +347,14 @@ export const api = {
 
     markAsRead: (token: string, id: string): Promise<Notification> => {
       return request<Notification>(`/notifications/${id}/read`, {
-        method: 'POST',
+        method: 'PATCH',
         headers: getAuthHeaders(token),
       });
     },
 
     markAllAsRead: (token: string): Promise<{ success: boolean }> => {
       return request<{ success: boolean }>('/notifications/read-all', {
-        method: 'POST',
+        method: 'PATCH',
         headers: getAuthHeaders(token),
       });
     },
@@ -289,6 +374,85 @@ export const api = {
         headers: getAuthHeaders(token),
         body: JSON.stringify(data),
       });
+    },
+  },
+
+  chat: {
+    /**
+     * List conversations for current user with pagination
+     */
+    listConversations: (
+      token: string,
+      options?: { limit?: number; cursor?: string }
+    ): Promise<ConversationsListResponse> => {
+      const params = new URLSearchParams();
+      if (options?.limit) params.append('limit', options.limit.toString());
+      if (options?.cursor) params.append('cursor', options.cursor);
+      const query = params.toString() ? `?${params.toString()}` : '';
+
+      return request<ConversationsListResponse>(`/conversations${query}`, {
+        method: 'GET',
+        headers: getAuthHeaders(token),
+      });
+    },
+
+    /**
+     * Get messages for a conversation with pagination
+     * @param contextMatchId - Optional match context to filter/set active context
+     */
+    getMessages: (
+      token: string,
+      conversationId: string,
+      options?: { limit?: number; cursor?: string; contextMatchId?: string }
+    ): Promise<MessagesListResponse> => {
+      const params = new URLSearchParams();
+      if (options?.limit) params.append('limit', options.limit.toString());
+      if (options?.cursor) params.append('cursor', options.cursor);
+      if (options?.contextMatchId) params.append('contextMatchId', options.contextMatchId);
+      const query = params.toString() ? `?${params.toString()}` : '';
+
+      return request<MessagesListResponse>(
+        `/conversations/${conversationId}/messages${query}`,
+        {
+          method: 'GET',
+          headers: getAuthHeaders(token),
+        }
+      );
+    },
+
+    /**
+     * Send a message to a conversation
+     * @param data - Message text and optional contextMatchId
+     */
+    sendMessage: (
+      token: string,
+      conversationId: string,
+      data: SendMessageData
+    ): Promise<ChatMessage> => {
+      return request<ChatMessage>(
+        `/conversations/${conversationId}/messages`,
+        {
+          method: 'POST',
+          headers: getAuthHeaders(token),
+          body: JSON.stringify(data),
+        }
+      );
+    },
+
+    /**
+     * Mark conversation as read
+     */
+    markAsRead: (
+      token: string,
+      conversationId: string
+    ): Promise<{ success: boolean }> => {
+      return request<{ success: boolean }>(
+        `/conversations/${conversationId}/read`,
+        {
+          method: 'PATCH',
+          headers: getAuthHeaders(token),
+        }
+      );
     },
   },
 };

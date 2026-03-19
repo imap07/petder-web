@@ -10,7 +10,7 @@ export function GoogleButton({ mode }: GoogleButtonProps) {
   const t = useTranslations('auth.google');
 
   const handleGoogleAuth = () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5050';
     window.location.href = `${apiUrl}/auth/google`;
   };
 

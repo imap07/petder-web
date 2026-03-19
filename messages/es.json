@@ -10,7 +10,8 @@
     "or": "o",
     "yes": "Sí",
     "no": "No",
-    "unknown": "Desconocido"
+    "unknown": "Desconocido",
+    "delete": "Eliminar"
   },
   "location": {
     "radiusLabel": "Radio de Descubrimiento",
@@ -61,6 +62,8 @@
     "discover": "Descubrir",
     "myPets": "Mis Mascotas",
     "matches": "Matches",
+    "messages": "Mensajes",
+    "notifications": "Alertas",
     "profile": "Perfil",
     "login": "Iniciar sesión",
     "register": "Registrarse",
@@ -161,6 +164,7 @@
     "actions": {
       "pass": "Pasar",
       "like": "Me gusta",
+      "dating": "Cita",
       "undo": "Deshacer"
     },
     "match": {
@@ -192,6 +196,13 @@
     "pet": {
       "title": "Agrega Tu Primera Mascota",
       "subtitle": "Agreguemos a tu amigo peludo para empezar a descubrir matches",
+      "incompletePetsTitle": "Completa los Perfiles de tus Mascotas",
+      "incompletePetsSubtitle": "Tus mascotas necesitan fotos para ser visibles",
+      "photosRequiredMessage": "Cada mascota necesita al menos 2 fotos para estar activa",
+      "photosRequiredHint": "Las mascotas sin suficientes fotos no aparecerán en el descubrimiento para otros usuarios.",
+      "yourPets": "Tus mascotas que necesitan fotos:",
+      "addPhotosButton": "Agregar Fotos",
+      "refreshStatus": "Ya agregué fotos, verificar de nuevo",
       "nameLabel": "Nombre de la Mascota",
       "namePlaceholder": "Ingresa el nombre de tu mascota",
       "speciesLabel": "Especie",
@@ -295,6 +306,16 @@
       "speciesOptions": {
         "dog": "Perro",
         "cat": "Gato",
+        "rabbit": "Conejo",
+        "bird": "Ave",
+        "fish": "Pez",
+        "hamster": "Hámster",
+        "guinea_pig": "Cobaya",
+        "turtle": "Tortuga",
+        "snake": "Serpiente",
+        "lizard": "Lagarto",
+        "ferret": "Hurón",
+        "horse": "Caballo",
         "other": "Otro"
       },
       "breedLabel": "Raza",
@@ -335,10 +356,18 @@
       "bioLabel": "Biografía",
       "bioPlaceholder": "Cuéntanos sobre esta mascota...",
       "photosLabel": "Fotos",
-      "photosPlaceholder": "URLs de fotos (separadas por coma, máx 6)",
+      "minRequired": "mín {min}",
+      "addFirstPhoto": "Agrega la primera foto de tu mascota",
+      "addMorePhotos": "Agregar otra foto",
+      "photosRequired": "Se requieren al menos {min} fotos para crear una mascota",
+      "maxPhotosReached": "Número máximo de fotos alcanzado",
+      "breedAIHintAfterCreate": "Después de crear tu mascota, puedes usar IA para detectar la raza",
       "submitButton": "Agregar Mascota",
-      "success": "¡Mascota agregada exitosamente!",
-      "breedAIHint": "Tip: Agrega una foto después de crear para detectar la raza con IA"
+      "success": "¡Mascota agregada exitosamente! Redirigiendo a edición...",
+      "breedAIHint": "Tip: Agrega una foto después de crear para detectar la raza con IA",
+      "errors": {
+        "minPhotos": "Por favor sube al menos {min} fotos"
+      }
     },
     "edit": {
       "title": "Editar Mascota",
@@ -364,15 +393,48 @@
       "addButton": "Agregar Mascota",
       "activePets": "Mascotas Activas",
       "inactivePets": "Mascotas Inactivas",
-      "inactive": "Inactiva",
       "editButton": "Editar",
-      "deleteButton": "Eliminar",
-      "deleteConfirm": "¿Estás seguro de que quieres desactivar esta mascota? Ya no aparecerá en el descubrimiento.",
       "yearsOld": "{years} años",
       "monthsOld": "{months} meses",
       "ageUnknown": "Edad desconocida",
       "vaccinated": "Vacunado",
       "neutered": "Esterilizado",
+      "status": {
+        "active": "Activa",
+        "inactive": "Inactiva",
+        "deleted": "Eliminada"
+      },
+      "actions": {
+        "menuLabel": "Acciones de mascota",
+        "activate": "Activar",
+        "deactivate": "Desactivar",
+        "delete": "Eliminar permanentemente"
+      },
+      "modals": {
+        "deactivate": {
+          "title": "¿Desactivar a {name}?",
+          "description": "Esta mascota se ocultará del descubrimiento pero permanecerá en tu lista de mascotas.",
+          "reactivateHint": "Puedes reactivar esta mascota en cualquier momento para hacerla visible de nuevo.",
+          "confirmButton": "Desactivar"
+        },
+        "delete": {
+          "title": "¿Eliminar mascota permanentemente?",
+          "warning1": "Esta acción no se puede deshacer.",
+          "warning2": "Todos los matches de esta mascota serán ocultados.",
+          "warning3": "Esta mascota nunca volverá a aparecer en descubrimiento o swipes.",
+          "confirmLabel": "Escribe \"{name}\" para confirmar",
+          "nameMismatch": "El nombre no coincide. Por favor escribe \"{name}\" exactamente.",
+          "checkboxLabel": "Entiendo que esta acción es permanente y no se puede deshacer",
+          "reasonLabel": "Razón (opcional)",
+          "reasonPlaceholder": "ej., La mascota encontró un nuevo hogar",
+          "confirmButton": "Eliminar permanentemente"
+        }
+      },
+      "success": {
+        "activated": "¡Mascota activada exitosamente!",
+        "deactivated": "¡Mascota desactivada exitosamente!",
+        "deleted": "¡Mascota eliminada exitosamente!"
+      },
       "sex": {
         "male": "Macho",
         "female": "Hembra",
@@ -397,14 +459,36 @@
       },
       "errors": {
         "loadFailed": "Error al cargar mascotas",
+        "activateFailed": "Error al activar mascota",
+        "deactivateFailed": "Error al desactivar mascota",
         "deleteFailed": "Error al eliminar mascota"
       }
     },
     "species": {
       "dog": "Perro",
       "cat": "Gato",
+      "rabbit": "Conejo",
+      "bird": "Ave",
+      "fish": "Pez",
+      "hamster": "Hámster",
+      "guinea_pig": "Cobaya",
+      "turtle": "Tortuga",
+      "snake": "Serpiente",
+      "lizard": "Lagarto",
+      "ferret": "Hurón",
+      "horse": "Caballo",
       "other": "Otro"
     },
+    "notFound": "Mascota no encontrada",
+    "notFoundDescription": "La mascota que buscas no existe o ha sido eliminada.",
+    "speciesLabel": "Especie",
+    "breedLabel": "Raza",
+    "ageLabel": "Edad",
+    "sizeLabel": "Tamaño",
+    "aboutLabel": "Acerca de",
+    "photosLabel": "Fotos",
+    "yearsOld": "años",
+    "backToMatches": "Volver a Matches",
     "breedAI": {
       "title": "Sugerencia de Raza con IA",
       "subtitle": "Deja que la IA detecte la raza de tu mascota desde la foto",
@@ -416,39 +500,172 @@
       "chooseThis": "Elegir",
       "useThis": "Usar",
       "detectAgain": "Detectar de nuevo",
+      "remaining": "restantes",
       "currentBreed": "Raza actual",
-      "notSupported": "La detección de raza con IA solo está disponible para perros y gatos.",
+      "notSupported": "La detección de raza con IA no está disponible para esta especie.",
       "addPhotoFirst": "Agrega una foto para detectar la raza con IA.",
       "noPredictions": "No se pudo detectar la raza. Intenta con otra foto.",
+      "attemptsRemaining": "{count} intentos restantes",
+      "rateLimitWarning": "Límite de detección alcanzado. Intenta de nuevo en {minutes} minutos.",
       "errors": {
         "detectionFailed": "La detección de raza falló. Por favor intenta de nuevo.",
-        "unsupportedSpecies": "La detección de raza con IA solo soporta perros y gatos.",
-        "applyFailed": "Error al actualizar la raza. Por favor intenta de nuevo."
+        "unsupportedSpecies": "La detección de raza con IA no está disponible para esta especie.",
+        "applyFailed": "Error al actualizar la raza. Por favor intenta de nuevo.",
+        "rateLimitExceeded": "Límite de detección alcanzado. Por favor espera {minutes} minutos antes de intentar de nuevo."
       }
     }
   },
   "matches": {
-    "title": "Mis Matches",
+    "title": "Matches",
+    "subtitle": "Conecta con las mascotas con las que hiciste match",
+    "searchPlaceholder": "Buscar por nombre de mascota o dueño...",
+    "clearSearch": "Limpiar búsqueda",
+    "refresh": "Actualizar matches",
+    "newMatches": "Nuevos Matches",
+    "messages": "Mensajes",
+    "filters": {
+      "all": "Todos",
+      "unread": "No leídos",
+      "new": "Nuevos"
+    },
+    "unknownPet": "Mascota desconocida",
+    "someone": "Alguien",
+    "sayHi": "¡Di hola!",
+    "new": "Nuevo",
+    "matchWith": "Match con",
+    "and": "y",
+    "totalMatches": "{count, plural, =1 {# match} other {# matches}} en total",
+    "noFilterResults": "No hay matches en esta categoría",
+    "startConversation": "¡Inicia una conversación!",
+    "startConversationHint": "Toca en un nuevo match arriba para saludar y empezar a chatear.",
     "empty": {
       "title": "Aún no tienes matches",
-      "subtitle": "¡Sigue deslizando para encontrar tus matches!",
-      "discover": "Descubrir Mascotas"
+      "description": "Cuando tú y otro dueño de mascota se gusten mutuamente, verás tus matches aquí.",
+      "cta": "Empezar a descubrir"
+    },
+    "noResults": {
+      "title": "Sin resultados",
+      "description": "No se encontraron matches para \"{query}\""
+    },
+    "error": {
+      "title": "Algo salió mal",
+      "description": "No pudimos cargar tus matches. Por favor intenta de nuevo.",
+      "retry": "Reintentar"
     },
     "matchCard": {
       "title": "¡Tienes un match!"
-    }
+    },
+    "conversationNotReady": "Conversacion no lista aun"
   },
   "notifications": {
     "title": "Notificaciones",
-    "empty": "No hay notificaciones aún",
-    "loading": "Cargando...",
-    "markAllRead": "Marcar todo como leído",
+    "loading": "Cargando notificaciones...",
+    "loadingMore": "Cargando más...",
+    "loadMore": "Cargar más",
+    "markAllAsRead": "Marcar todo como leído",
     "viewAll": "Ver todas las notificaciones",
+    "unreadCount": "{count} sin leer",
+    "endOfList": "¡Estás al día!",
+    "status": {
+      "live": "En vivo",
+      "offline": "Desconectado"
+    },
+    "empty": {
+      "title": "No hay notificaciones aún",
+      "subtitle": "Cuando recibas me gusta, matches o mensajes, aparecerán aquí.",
+      "cta": "Empezar a descubrir mascotas"
+    },
     "types": {
       "match": "Nuevo Match",
       "like": "Nuevo Me Gusta",
       "message": "Nuevo Mensaje",
+      "pet_status": "Actualización de Mascota",
       "system": "Sistema"
+    },
+    "actions": {
+      "viewMatch": "Ver match",
+      "openChat": "Abrir chat",
+      "viewPet": "Ver mascota",
+      "managePet": "Administrar mascota",
+      "delete": "Eliminar notificación"
+    },
+    "time": {
+      "justNow": "Ahora mismo",
+      "minutesAgo": "hace {count}m",
+      "hoursAgo": "hace {count}h",
+      "daysAgo": "hace {count}d"
     }
+  },
+  "chat": {
+    "messages": "Mensajes",
+    "searchPlaceholder": "Buscar por nombre...",
+    "noMessages": "No hay mensajes aún",
+    "noMessagesDescription": "Cuando hagas match con alguien, podrás chatear aquí.",
+    "goToMatches": "Ir a Matches",
+    "noResults": "No se encontraron resultados",
+    "sayHi": "¡Di hola!",
+    "loadMore": "Cargar más",
+    "loadOlder": "Cargar mensajes anteriores",
+    "loading": "Cargando...",
+    "typeMessage": "Escribe un mensaje...",
+    "send": "Enviar",
+    "sending": "Enviando...",
+    "sent": "Enviado",
+    "delivered": "Entregado",
+    "read": "Leído",
+    "failedRetry": "Error. Toca para reintentar",
+    "startConversation": "¡Inicia la conversación!",
+    "conversationNotFound": "Conversación no encontrada",
+    "backToMessages": "Volver a Mensajes",
+    "back": "Volver",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "openChat": "Abrir chat",
+    "chattingAs": "Chateando como {name}",
+    "chatContext": "{myPet} y {otherPet}",
+    "switchContext": "Cambiar contexto",
+    "contextCount": "{count} pares de mascotas",
+    "inputHint": "Enter para enviar · Shift+Enter para nueva línea",
+    "typing": "{name} está escribiendo...",
+    "connected": "Conectado",
+    "disconnected": "Desconectado"
+  },
+  "activePet": {
+    "browsingAs": "Navegando como {name}",
+    "browsingAsLabel": "Navegando como",
+    "selectPet": "Seleccionar mascota",
+    "choosePetTitle": "Elige una mascota para continuar",
+    "choosePetDescription": "Selecciona con cual mascota quieres navegar y hacer swipe.",
+    "addPet": "Agregar nueva mascota",
+    "inactive": "Inactiva",
+    "rememberChoice": "Recordar mi eleccion",
+    "noActivePetsTitle": "Sin mascotas activas",
+    "noActivePetsDescription": "Activa una de tus mascotas para empezar a descubrir matches.",
+    "noPetsTitle": "Sin mascotas aun",
+    "noPetsDescription": "Agrega tu primera mascota para empezar a descubrir matches.",
+    "switchTo": "Cambiar a {name}",
+    "matchFor": "Match de {name}",
+    "matchContext": "{myPet} x {otherPet}"
+  },
+  "dating": {
+    "title": "Modo cita",
+    "sameSexBody": "Amamos todo tipo de conexiones. Esta mascota es del mismo sexo que la tuya - quieres continuar con Cita, o enviar un Me gusta?",
+    "continueDating": "Continuar con Cita",
+    "sendLike": "Enviar Me gusta",
+    "dontShowAgain": "No mostrar de nuevo"
+  },
+  "matchIntent": {
+    "social": "Social",
+    "mixed": "Mixto",
+    "dating": "Cita"
+  },
+  "general": {
+    "conversationNotReady": "Conversacion no lista aun",
+    "retry": "Reintentar",
+    "viewProfile": "Ver perfil",
+    "openChat": "Abrir chat",
+    "multiContext": "Multi-contexto",
+    "switchContext": "Cambiar contexto",
+    "contextSwitchedTo": "Contexto cambiado a {context}"
   }
 }

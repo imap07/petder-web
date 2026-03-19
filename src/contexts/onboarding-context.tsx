@@ -16,6 +16,7 @@ import type { OwnerProfile, Pet } from '@/types';
 interface OnboardingState {
   ownerProfile: OwnerProfile | null;
   pets: Pet[];
+  incompletePets: Pet[];
   isLoading: boolean;
   isOnboardingComplete: boolean;
   needsOwnerSetup: boolean;
@@ -34,6 +35,8 @@ const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 // Routes that don't require onboarding check
 const PUBLIC_ROUTES = ['/', '/login', '/register', '/auth/callback'];
 const ONBOARDING_ROUTE = '/onboarding';
+// Routes allowed during pet setup (to add photos to existing pets)
+const PET_SETUP_ALLOWED_ROUTES = ['/pets/'];
 
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated, isLoading: authLoading, token } = useAuth();
@@ -43,6 +46,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<OnboardingState>({
     ownerProfile: null,
     pets: [],
+    incompletePets: [],
     isLoading: true,
     isOnboardingComplete: false,
     needsOwnerSetup: false,
@@ -69,14 +73,17 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         !ownerProfile.avatarUrl ||  // Avatar is now required
         !ownerProfile.displayName || 
         !ownerProfile.preferences?.discoveryRadiusKm;
-      // Pets need at least 2 photos
-      const validPets = activePets.filter((p) => p.photos && p.photos.length >= 2);
-      const needsPetSetup = validPets.length === 0;
+      // Pets need at least 2 photos to be considered complete
+      const completePets = activePets.filter((p) => p.photos && p.photos.length >= 2);
+      const incompletePets = activePets.filter((p) => !p.photos || p.photos.length < 2);
+      // User needs at least one complete pet (with 2+ photos) to finish onboarding
+      const needsPetSetup = completePets.length === 0;
       const isOnboardingComplete = !needsOwnerSetup && !needsPetSetup;
 
       setState({
         ownerProfile,
         pets,
+        incompletePets,
         isLoading: false,
         isOnboardingComplete,
         needsOwnerSetup,
@@ -127,6 +134,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       setState({
         ownerProfile: null,
         pets: [],
+        incompletePets: [],
         isLoading: false,
         isOnboardingComplete: false,
         needsOwnerSetup: false,
@@ -142,12 +150,15 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
     const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
     const isOnboardingRoute = pathname.startsWith(ONBOARDING_ROUTE);
+    // Allow access to pet edit pages during pet setup (to add photos)
+    const isPetSetupAllowedRoute = PET_SETUP_ALLOWED_ROUTES.some(route => pathname.startsWith(route));
 
     // If on a protected route and onboarding not complete, redirect
     if (!isPublicRoute && !isOnboardingRoute) {
       if (state.needsOwnerSetup) {
         router.replace('/onboarding?step=owner');
-      } else if (state.needsPetSetup) {
+      } else if (state.needsPetSetup && !isPetSetupAllowedRoute) {
+        // Allow pet edit pages so users can add photos to incomplete pets
         router.replace('/onboarding?step=pet');
       }
     }

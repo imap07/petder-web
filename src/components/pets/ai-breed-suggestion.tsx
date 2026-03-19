@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { api, ApiError } from '@/lib';
 import { Button } from '@/components/ui';
-import type { BreedPrediction, BreedSpecies, PetSpecies } from '@/types';
+import type { BreedPrediction, BreedSpecies, PetSpecies, RateLimitInfo } from '@/types';
 
 interface AIBreedSuggestionProps {
   petId: string;
@@ -16,6 +16,7 @@ interface AIBreedSuggestionProps {
 }
 
 export function AIBreedSuggestion({
+  petId,
   petSpecies,
   photoUrl,
   currentBreed,
@@ -28,18 +29,20 @@ export function AIBreedSuggestion({
   const [error, setError] = useState<string | null>(null);
   const [selectedBreed, setSelectedBreed] = useState<string | null>(null);
   const [isApplying, setIsApplying] = useState(false);
+  const [rateLimit, setRateLimit] = useState<RateLimitInfo | null>(null);
 
-  const isSupported = petSpecies === 'dog' || petSpecies === 'cat';
+  // All species are now supported via Google Cloud Vision
   const hasPhoto = !!photoUrl;
-  const canDetect = isSupported && hasPhoto && !isLoading;
+  const isRateLimited = rateLimit && rateLimit.attemptsRemaining === 0;
+  const canDetect = hasPhoto && !isLoading && !isRateLimited;
 
-  // Don't render anything if species is not supported or no photo
-  if (!isSupported || !hasPhoto) {
+  // Don't render anything if no photo
+  if (!hasPhoto) {
     return null;
   }
 
   const handleDetect = async () => {
-    if (!photoUrl || !isSupported) return;
+    if (!photoUrl || !petId) return;
 
     setIsLoading(true);
     setError(null);
@@ -50,14 +53,29 @@ export function AIBreedSuggestion({
       const response = await api.breedRecognition.recognize(token, {
         imageUrl: photoUrl,
         species: petSpecies as BreedSpecies,
+        petId: petId,
         topK: 5,
       });
+
+      // Update rate limit info
+      setRateLimit(response.rateLimit);
 
       // Only show top 3 results
       setPredictions(response.top.slice(0, 3));
     } catch (err) {
       if (err instanceof ApiError) {
-        if (err.statusCode === 400) {
+        if (err.statusCode === 429) {
+          // Rate limit exceeded - parse the error message for wait time
+          const waitMatch = err.message.match(/(\d+)\s*minutes?/i);
+          const waitMinutes = waitMatch ? parseInt(waitMatch[1], 10) : 120;
+          setRateLimit({
+            attemptsUsed: 3,
+            attemptsRemaining: 0,
+            resetAt: new Date(Date.now() + waitMinutes * 60 * 1000).toISOString(),
+            waitTimeMinutes: waitMinutes,
+          });
+          setError(t('errors.rateLimitExceeded', { minutes: waitMinutes }));
+        } else if (err.statusCode === 400) {
           setError(t('errors.unsupportedSpecies'));
         } else {
           setError(t('errors.detectionFailed'));
@@ -125,7 +143,7 @@ export function AIBreedSuggestion({
         </div>
 
         {/* Detect Button - Always visible when no predictions */}
-        {!predictions && (
+        {!predictions && !isRateLimited && (
           <Button
             onClick={handleDetect}
             disabled={!canDetect}
@@ -144,6 +162,36 @@ export function AIBreedSuggestion({
           </Button>
         )}
       </div>
+
+      {/* Rate limit info */}
+      {rateLimit && rateLimit.attemptsRemaining > 0 && (
+        <div className="text-xs text-text-muted flex items-center gap-1">
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          {t('attemptsRemaining', { count: rateLimit.attemptsRemaining })}
+        </div>
+      )}
+
+      {/* Rate limit exceeded warning */}
+      {isRateLimited && rateLimit.waitTimeMinutes && (
+        <div className="p-3 rounded-lg bg-warning-bg border border-warning/20 text-warning text-sm flex items-center gap-2">
+          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          {t('rateLimitWarning', { minutes: rateLimit.waitTimeMinutes })}
+        </div>
+      )}
 
       {/* Error message */}
       {error && (
@@ -205,23 +253,34 @@ export function AIBreedSuggestion({
           </div>
 
           {/* Detect again button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleDetect}
-            disabled={isLoading}
-            className="w-full text-text-muted hover:text-text"
-          >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-            {t('detectAgain')}
-          </Button>
+          {!isRateLimited ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDetect}
+              disabled={isLoading}
+              className="w-full text-text-muted hover:text-text"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+              {t('detectAgain')}
+              {rateLimit && rateLimit.attemptsRemaining > 0 && (
+                <span className="ml-1 text-xs opacity-75">
+                  ({rateLimit.attemptsRemaining} {t('remaining')})
+                </span>
+              )}
+            </Button>
+          ) : (
+            <div className="text-center text-sm text-text-muted py-2">
+              {t('rateLimitWarning', { minutes: rateLimit?.waitTimeMinutes || 120 })}
+            </div>
+          )}
         </div>
       )}
 

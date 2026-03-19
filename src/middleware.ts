@@ -8,5 +8,12 @@ export const config = {
   // - API routes
   // - _next (Next.js internals)
   // - Static files (images, fonts, etc.)
-  matcher: ['/', '/(en|es)/:path*'],
+  matcher: [
+    // Match root
+    '/',
+    // Match locale paths
+    '/(en|es)/:path*',
+    // Match all paths that need locale redirect (excluding static files and internals)
+    '/((?!api|_next|_vercel|.*\\..*).*)',
+  ],
 };

@@ -5,8 +5,9 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
-import { AuthProvider, OnboardingProvider, ThemeProvider, NotificationsProvider } from '@/contexts';
+import { AuthProvider, OnboardingProvider, ThemeProvider, NotificationsProvider, ActivePetProvider } from '@/contexts';
 import { Navbar } from '@/components/layout';
+import { ActivePetPickerModal } from '@/components/active-pet';
 import '../globals.css';
 
 const inter = Inter({
@@ -45,12 +46,15 @@ export default async function LocaleLayout({
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <AuthProvider>
-              <NotificationsProvider>
-                <OnboardingProvider>
-                  <Navbar />
-                  <main>{children}</main>
-                </OnboardingProvider>
-              </NotificationsProvider>
+              <ActivePetProvider>
+                <NotificationsProvider>
+                  <OnboardingProvider>
+                    <Navbar />
+                    <ActivePetPickerModal />
+                    <main className="pb-20 md:pb-0">{children}</main>
+                  </OnboardingProvider>
+                </NotificationsProvider>
+              </ActivePetProvider>
             </AuthProvider>
           </NextIntlClientProvider>
         </ThemeProvider>

@@ -133,6 +133,12 @@ function LoginContent() {
             <GoogleButton mode="login" />
 
             <p className="text-sm text-center text-text-muted">
+              <Link href="/forgot-password" className="text-primary hover:underline font-medium">
+                Forgot your password?
+              </Link>
+            </p>
+
+            <p className="text-sm text-center text-text-muted">
               {t('login.noAccount')}{' '}
               <Link href="/register" className="text-primary hover:underline font-medium">
                 {t('login.registerLink')}

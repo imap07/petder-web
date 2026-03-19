@@ -8,6 +8,7 @@ interface SwipeableCardProps {
   pet: Pet;
   onLike: () => void;
   onPass: () => void;
+  onDating?: () => void;
   isLoading?: boolean;
 }
 
@@ -18,7 +19,7 @@ const speciesEmoji: Record<string, string> = {
 };
 
 
-export function SwipeableCard({ pet, onLike, onPass, isLoading }: SwipeableCardProps) {
+export function SwipeableCard({ pet, onLike, onPass, onDating, isLoading }: SwipeableCardProps) {
   const t = useTranslations('discover');
   const tPets = useTranslations('pets.species');
   const tSize = useTranslations('pets.list.size');
@@ -151,6 +152,14 @@ export function SwipeableCard({ pet, onLike, onPass, isLoading }: SwipeableCardP
     setIsExiting('right');
     setTimeout(() => {
       onLike();
+    }, 300);
+  };
+
+  const handleDatingClick = () => {
+    if (isLoading || isExiting || !onDating) return;
+    setIsExiting('right');
+    setTimeout(() => {
+      onDating();
     }, 300);
   };
 
@@ -393,18 +402,21 @@ export function SwipeableCard({ pet, onLike, onPass, isLoading }: SwipeableCardP
           </svg>
         </button>
 
-        {/* Super Like Button (optional center button) */}
-        <button
-          className="w-12 h-12 rounded-full bg-foreground border-2 border-border
-                   flex items-center justify-center
-                   hover:border-blue-400 hover:scale-105
-                   active:scale-95 transition-all duration-200"
-          aria-label="Super Like"
-        >
-          <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-          </svg>
-        </button>
+        {/* Dating Button - romantic interest */}
+        {onDating && (
+          <button
+            onClick={handleDatingClick}
+            disabled={isLoading || !!isExiting}
+            className="group w-14 h-14 rounded-full bg-foreground border-2 border-border
+                     flex items-center justify-center
+                     hover:border-pink-400 hover:bg-pink-50 dark:hover:bg-pink-950 hover:scale-110
+                     active:scale-95 transition-all duration-200
+                     disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            aria-label={t('actions.dating')}
+          >
+            <span className="text-2xl group-hover:scale-110 transition-transform">💕</span>
+          </button>
+        )}
 
         {/* Like Button */}
         <button
@@ -428,11 +440,17 @@ export function SwipeableCard({ pet, onLike, onPass, isLoading }: SwipeableCardP
       </div>
 
       {/* Keyboard hints (desktop) */}
-      <div className="hidden md:flex justify-center gap-8 mt-4 text-xs text-text-muted">
+      <div className="hidden md:flex justify-center gap-6 mt-4 text-xs text-text-muted">
         <span className="flex items-center gap-1.5">
           <kbd className="px-2 py-1 bg-surface border border-border rounded text-[10px] font-mono">←</kbd>
           {t('actions.pass')}
         </span>
+        {onDating && (
+          <span className="flex items-center gap-1.5">
+            <kbd className="px-2 py-1 bg-surface border border-border rounded text-[10px] font-mono">↑</kbd>
+            {t('actions.dating')}
+          </span>
+        )}
         <span className="flex items-center gap-1.5">
           <kbd className="px-2 py-1 bg-surface border border-border rounded text-[10px] font-mono">→</kbd>
           {t('actions.like')}

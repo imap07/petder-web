@@ -7,19 +7,34 @@ import { useAuth } from '@/contexts';
 import { api } from '@/lib';
 import { ProtectedRoute } from '@/components/auth';
 import { Button, Card, CardContent } from '@/components/ui';
-import type { Pet } from '@/types';
+import {
+  PetStatusBadge,
+  PetActionsMenu,
+  DeactivatePetModal,
+  DeletePetModal,
+} from '@/components/pets';
+import type { Pet, PetStatus } from '@/types';
+
+interface PetCardProps {
+  pet: Pet;
+  onActivate: (id: string) => void;
+  onDeactivate: (id: string) => void;
+  onDelete: (id: string) => void;
+  isLoading: boolean;
+}
 
 function PetCard({
   pet,
+  onActivate,
+  onDeactivate,
   onDelete,
-  isDeleting,
-}: {
-  pet: Pet;
-  onDelete: (id: string) => void;
-  isDeleting: boolean;
-}) {
+  isLoading,
+}: PetCardProps) {
   const t = useTranslations('pets.list');
   const tSpecies = useTranslations('pets.species');
+
+  // Derive status from pet.status or fallback to isActive for backward compatibility
+  const status: PetStatus = pet.status || (pet.isActive ? 'active' : 'inactive');
 
   const getAgeDisplay = () => {
     if (!pet.ageMonths) return t('ageUnknown');
@@ -31,7 +46,7 @@ function PetCard({
   };
 
   return (
-    <Card className={`overflow-hidden ${!pet.isActive ? 'opacity-60' : ''}`}>
+    <Card className={`overflow-hidden ${status === 'inactive' ? 'opacity-75' : ''}`}>
       <div className="relative">
         {pet.photos.length > 0 ? (
           <img
@@ -40,15 +55,28 @@ function PetCard({
             className="w-full h-48 object-cover"
           />
         ) : (
-          <div className="w-full h-48 bg-surface flex items-center justify-center">
+          <div className="w-full h-48 bg-surface dark:bg-gray-700 flex items-center justify-center">
             <span className="text-6xl">🐾</span>
           </div>
         )}
-        {!pet.isActive && (
-          <div className="absolute top-2 right-2 bg-error text-text-inverse text-xs px-2 py-1 rounded">
-            {t('inactive')}
+        {/* Status badge */}
+        <div className="absolute top-2 left-2">
+          <PetStatusBadge status={status} />
+        </div>
+        {/* Actions menu */}
+        <div className="absolute top-2 right-2">
+          <div className="bg-white/90 dark:bg-gray-800/90 rounded-lg backdrop-blur-sm">
+            <PetActionsMenu
+              petId={pet.id}
+              petName={pet.name}
+              status={status}
+              onActivate={() => onActivate(pet.id)}
+              onDeactivate={() => onDeactivate(pet.id)}
+              onDelete={() => onDelete(pet.id)}
+              isLoading={isLoading}
+            />
           </div>
-        )}
+        </div>
       </div>
 
       <CardContent className="p-4">
@@ -68,22 +96,22 @@ function PetCard({
 
         <div className="flex flex-wrap gap-2 mb-4">
           {pet.sex !== 'unknown' && (
-            <span className="text-xs bg-surface border border-border text-text-muted px-2 py-1 rounded">
+            <span className="text-xs bg-surface dark:bg-gray-700 border border-border dark:border-gray-600 text-text-muted px-2 py-1 rounded">
               {t(`sex.${pet.sex}`)}
             </span>
           )}
           {pet.size && (
-            <span className="text-xs bg-surface border border-border text-text-muted px-2 py-1 rounded">
+            <span className="text-xs bg-surface dark:bg-gray-700 border border-border dark:border-gray-600 text-text-muted px-2 py-1 rounded">
               {t(`size.${pet.size}`)}
             </span>
           )}
           {pet.energyLevel && (
-            <span className="text-xs bg-surface border border-border text-text-muted px-2 py-1 rounded">
+            <span className="text-xs bg-surface dark:bg-gray-700 border border-border dark:border-gray-600 text-text-muted px-2 py-1 rounded">
               {t(`energy.${pet.energyLevel}`)}
             </span>
           )}
           {pet.vaccinated && (
-            <span className="text-xs bg-success-bg text-success border border-success/20 px-2 py-1 rounded">
+            <span className="text-xs bg-success-bg dark:bg-success/20 text-success border border-success/20 px-2 py-1 rounded">
               {t('vaccinated')}
             </span>
           )}
@@ -94,24 +122,11 @@ function PetCard({
           )}
         </div>
 
-        <div className="flex gap-2">
-          <Link href={`/pets/${pet.id}/edit`} className="flex-1">
-            <Button variant="outline" size="sm" className="w-full">
-              {t('editButton')}
-            </Button>
-          </Link>
-          {pet.isActive && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onDelete(pet.id)}
-              isLoading={isDeleting}
-              className="text-error hover:text-error hover:bg-error-bg"
-            >
-              {t('deleteButton')}
-            </Button>
-          )}
-        </div>
+        <Link href={`/pets/${pet.id}/edit`} className="block">
+          <Button variant="outline" size="sm" className="w-full">
+            {t('editButton')}
+          </Button>
+        </Link>
       </CardContent>
     </Card>
   );
@@ -123,8 +138,22 @@ function PetsListContent() {
 
   const [pets, setPets] = useState<Pet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Modal states
+  const [deactivateModal, setDeactivateModal] = useState<{
+    isOpen: boolean;
+    petId: string;
+    petName: string;
+  }>({ isOpen: false, petId: '', petName: '' });
+
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    petId: string;
+    petName: string;
+  }>({ isOpen: false, petId: '', petName: '' });
 
   const fetchPets = async () => {
     if (!token) return;
@@ -145,24 +174,91 @@ function PetsListContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  const handleDelete = async (id: string) => {
+  // Clear messages after timeout
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  const handleActivate = async (id: string) => {
     if (!token) return;
 
-    const confirmed = window.confirm(t('deleteConfirm'));
-    if (!confirmed) return;
-
-    setDeletingId(id);
+    setActionLoadingId(id);
     try {
-      await api.pets.delete(token, id);
-      // Update the pet in the list to show as inactive
+      const updatedPet = await api.pets.activate(token, id);
       setPets((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, isActive: false } : p))
+        prev.map((p) => (p.id === id ? updatedPet : p))
       );
+      setSuccessMessage(t('success.activated'));
+    } catch (err) {
+      console.error('Error activating pet:', err);
+      setError(t('errors.activateFailed'));
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  const handleDeactivateClick = (id: string) => {
+    const pet = pets.find((p) => p.id === id);
+    if (pet) {
+      setDeactivateModal({ isOpen: true, petId: id, petName: pet.name });
+    }
+  };
+
+  const handleDeactivateConfirm = async () => {
+    if (!token) return;
+
+    const { petId } = deactivateModal;
+    setActionLoadingId(petId);
+
+    try {
+      const updatedPet = await api.pets.deactivate(token, petId);
+      setPets((prev) =>
+        prev.map((p) => (p.id === petId ? updatedPet : p))
+      );
+      setSuccessMessage(t('success.deactivated'));
+      setDeactivateModal({ isOpen: false, petId: '', petName: '' });
+    } catch (err) {
+      console.error('Error deactivating pet:', err);
+      setError(t('errors.deactivateFailed'));
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  const handleDeleteClick = (id: string) => {
+    const pet = pets.find((p) => p.id === id);
+    if (pet) {
+      setDeleteModal({ isOpen: true, petId: id, petName: pet.name });
+    }
+  };
+
+  const handleDeleteConfirm = async (reason?: string) => {
+    if (!token) return;
+
+    const { petId } = deleteModal;
+    setActionLoadingId(petId);
+
+    try {
+      await api.pets.delete(token, petId, reason);
+      // Remove from list (deleted pets are not shown)
+      setPets((prev) => prev.filter((p) => p.id !== petId));
+      setSuccessMessage(t('success.deleted'));
+      setDeleteModal({ isOpen: false, petId: '', petName: '' });
     } catch (err) {
       console.error('Error deleting pet:', err);
       setError(t('errors.deleteFailed'));
     } finally {
-      setDeletingId(null);
+      setActionLoadingId(null);
     }
   };
 
@@ -174,8 +270,9 @@ function PetsListContent() {
     );
   }
 
-  const activePets = pets.filter((p) => p.isActive);
-  const inactivePets = pets.filter((p) => !p.isActive);
+  // Filter pets by status (exclude deleted - they shouldn't be returned by API anyway)
+  const activePets = pets.filter((p) => (p.status || (p.isActive ? 'active' : 'inactive')) === 'active');
+  const inactivePets = pets.filter((p) => (p.status || (p.isActive ? 'active' : 'inactive')) === 'inactive');
 
   return (
     <div className="min-h-[calc(100vh-64px)] py-8 px-4">
@@ -190,8 +287,22 @@ function PetsListContent() {
           </Link>
         </div>
 
+        {/* Success message */}
+        {successMessage && (
+          <div className="p-4 rounded-lg bg-success-bg dark:bg-success/20 border border-success/20 text-success mb-6 flex items-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {successMessage}
+          </div>
+        )}
+
+        {/* Error message */}
         {error && (
-          <div className="p-4 rounded-lg bg-error-bg border border-error/20 text-error mb-6">
+          <div className="p-4 rounded-lg bg-error-bg dark:bg-error/20 border border-error/20 text-error mb-6 flex items-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
             {error}
           </div>
         )}
@@ -217,8 +328,10 @@ function PetsListContent() {
                     <PetCard
                       key={pet.id}
                       pet={pet}
-                      onDelete={handleDelete}
-                      isDeleting={deletingId === pet.id}
+                      onActivate={handleActivate}
+                      onDeactivate={handleDeactivateClick}
+                      onDelete={handleDeleteClick}
+                      isLoading={actionLoadingId === pet.id}
                     />
                   ))}
                 </div>
@@ -235,8 +348,10 @@ function PetsListContent() {
                     <PetCard
                       key={pet.id}
                       pet={pet}
-                      onDelete={handleDelete}
-                      isDeleting={deletingId === pet.id}
+                      onActivate={handleActivate}
+                      onDeactivate={handleDeactivateClick}
+                      onDelete={handleDeleteClick}
+                      isLoading={actionLoadingId === pet.id}
                     />
                   ))}
                 </div>
@@ -245,6 +360,24 @@ function PetsListContent() {
           </>
         )}
       </div>
+
+      {/* Deactivate Modal */}
+      <DeactivatePetModal
+        petName={deactivateModal.petName}
+        isOpen={deactivateModal.isOpen}
+        isLoading={actionLoadingId === deactivateModal.petId}
+        onConfirm={handleDeactivateConfirm}
+        onCancel={() => setDeactivateModal({ isOpen: false, petId: '', petName: '' })}
+      />
+
+      {/* Delete Modal */}
+      <DeletePetModal
+        petName={deleteModal.petName}
+        isOpen={deleteModal.isOpen}
+        isLoading={actionLoadingId === deleteModal.petId}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteModal({ isOpen: false, petId: '', petName: '' })}
+      />
     </div>
   );
 }

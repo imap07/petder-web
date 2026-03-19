@@ -10,7 +10,8 @@
     "or": "or",
     "yes": "Yes",
     "no": "No",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "delete": "Delete"
   },
   "location": {
     "radiusLabel": "Discovery Radius",
@@ -61,6 +62,8 @@
     "discover": "Discover",
     "myPets": "My Pets",
     "matches": "Matches",
+    "messages": "Messages",
+    "notifications": "Alerts",
     "profile": "Profile",
     "login": "Login",
     "register": "Register",
@@ -161,6 +164,7 @@
     "actions": {
       "pass": "Pass",
       "like": "Like",
+      "dating": "Dating",
       "undo": "Undo"
     },
     "match": {
@@ -192,6 +196,13 @@
     "pet": {
       "title": "Add Your First Pet",
       "subtitle": "Let's add your furry friend to start discovering matches",
+      "incompletePetsTitle": "Complete Your Pet Profiles",
+      "incompletePetsSubtitle": "Your pets need photos to be visible in discovery",
+      "photosRequiredMessage": "Each pet needs at least 2 photos to be active",
+      "photosRequiredHint": "Pets without enough photos won't appear in discovery for other users.",
+      "yourPets": "Your pets that need photos:",
+      "addPhotosButton": "Add Photos",
+      "refreshStatus": "I've added photos, check again",
       "nameLabel": "Pet Name",
       "namePlaceholder": "Enter pet's name",
       "speciesLabel": "Species",
@@ -295,6 +306,16 @@
       "speciesOptions": {
         "dog": "Dog",
         "cat": "Cat",
+        "rabbit": "Rabbit",
+        "bird": "Bird",
+        "fish": "Fish",
+        "hamster": "Hamster",
+        "guinea_pig": "Guinea Pig",
+        "turtle": "Turtle",
+        "snake": "Snake",
+        "lizard": "Lizard",
+        "ferret": "Ferret",
+        "horse": "Horse",
         "other": "Other"
       },
       "breedLabel": "Breed",
@@ -335,10 +356,18 @@
       "bioLabel": "Bio",
       "bioPlaceholder": "Tell us about this pet...",
       "photosLabel": "Photos",
-      "photosPlaceholder": "Photo URLs (comma separated, max 6)",
+      "minRequired": "min {min}",
+      "addFirstPhoto": "Add your pet's first photo",
+      "addMorePhotos": "Add another photo",
+      "photosRequired": "At least {min} photos are required to create a pet",
+      "maxPhotosReached": "Maximum number of photos reached",
+      "breedAIHintAfterCreate": "After creating your pet, you can use AI to detect the breed",
       "submitButton": "Add Pet",
-      "success": "Pet added successfully!",
-      "breedAIHint": "Tip: Add a photo after creation to detect breed with AI"
+      "success": "Pet added successfully! Redirecting to edit page...",
+      "breedAIHint": "Tip: Add a photo after creation to detect breed with AI",
+      "errors": {
+        "minPhotos": "Please upload at least {min} photos"
+      }
     },
     "edit": {
       "title": "Edit Pet",
@@ -364,15 +393,48 @@
       "addButton": "Add Pet",
       "activePets": "Active Pets",
       "inactivePets": "Inactive Pets",
-      "inactive": "Inactive",
       "editButton": "Edit",
-      "deleteButton": "Delete",
-      "deleteConfirm": "Are you sure you want to deactivate this pet? It will no longer appear in discovery.",
       "yearsOld": "{years} years old",
       "monthsOld": "{months} months old",
       "ageUnknown": "Age unknown",
       "vaccinated": "Vaccinated",
       "neutered": "Neutered",
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "deleted": "Deleted"
+      },
+      "actions": {
+        "menuLabel": "Pet actions",
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "delete": "Delete permanently"
+      },
+      "modals": {
+        "deactivate": {
+          "title": "Deactivate {name}?",
+          "description": "This pet will be hidden from discovery but will remain in your pet list.",
+          "reactivateHint": "You can reactivate this pet at any time to make it visible again.",
+          "confirmButton": "Deactivate"
+        },
+        "delete": {
+          "title": "Delete pet permanently?",
+          "warning1": "This action cannot be undone.",
+          "warning2": "All matches involving this pet will be hidden.",
+          "warning3": "This pet will never appear in discovery or swipes again.",
+          "confirmLabel": "Type \"{name}\" to confirm",
+          "nameMismatch": "Name does not match. Please type \"{name}\" exactly.",
+          "checkboxLabel": "I understand this action is permanent and cannot be undone",
+          "reasonLabel": "Reason (optional)",
+          "reasonPlaceholder": "e.g., Pet found a new home",
+          "confirmButton": "Delete permanently"
+        }
+      },
+      "success": {
+        "activated": "Pet activated successfully!",
+        "deactivated": "Pet deactivated successfully!",
+        "deleted": "Pet deleted successfully!"
+      },
       "sex": {
         "male": "Male",
         "female": "Female",
@@ -397,14 +459,36 @@
       },
       "errors": {
         "loadFailed": "Failed to load pets",
+        "activateFailed": "Failed to activate pet",
+        "deactivateFailed": "Failed to deactivate pet",
         "deleteFailed": "Failed to delete pet"
       }
     },
     "species": {
       "dog": "Dog",
       "cat": "Cat",
+      "rabbit": "Rabbit",
+      "bird": "Bird",
+      "fish": "Fish",
+      "hamster": "Hamster",
+      "guinea_pig": "Guinea Pig",
+      "turtle": "Turtle",
+      "snake": "Snake",
+      "lizard": "Lizard",
+      "ferret": "Ferret",
+      "horse": "Horse",
       "other": "Other"
     },
+    "notFound": "Pet not found",
+    "notFoundDescription": "The pet you're looking for doesn't exist or has been removed.",
+    "speciesLabel": "Species",
+    "breedLabel": "Breed",
+    "ageLabel": "Age",
+    "sizeLabel": "Size",
+    "aboutLabel": "About",
+    "photosLabel": "Photos",
+    "yearsOld": "years old",
+    "backToMatches": "Back to Matches",
     "breedAI": {
       "title": "AI Breed Suggestion",
       "subtitle": "Let AI detect your pet's breed from the photo",
@@ -416,39 +500,172 @@
       "chooseThis": "Choose",
       "useThis": "Use",
       "detectAgain": "Detect again",
+      "remaining": "left",
       "currentBreed": "Current breed",
-      "notSupported": "AI breed detection is available for dogs and cats only.",
+      "notSupported": "AI breed detection is not available for this species.",
       "addPhotoFirst": "Add a photo to detect breed with AI.",
       "noPredictions": "Could not detect breed. Try with a different photo.",
+      "attemptsRemaining": "{count} attempts remaining",
+      "rateLimitWarning": "Detection limit reached. Try again in {minutes} minutes.",
       "errors": {
         "detectionFailed": "Breed detection failed. Please try again.",
-        "unsupportedSpecies": "AI breed detection only supports dogs and cats.",
-        "applyFailed": "Failed to update breed. Please try again."
+        "unsupportedSpecies": "AI breed detection is not available for this species.",
+        "applyFailed": "Failed to update breed. Please try again.",
+        "rateLimitExceeded": "Detection limit reached. Please wait {minutes} minutes before trying again."
       }
     }
   },
   "matches": {
-    "title": "My Matches",
+    "title": "Matches",
+    "subtitle": "Connect with pets you matched with",
+    "searchPlaceholder": "Search by pet or owner name...",
+    "clearSearch": "Clear search",
+    "refresh": "Refresh matches",
+    "newMatches": "New Matches",
+    "messages": "Messages",
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "new": "New"
+    },
+    "unknownPet": "Unknown Pet",
+    "someone": "Someone",
+    "sayHi": "Say hi!",
+    "new": "New",
+    "matchWith": "Match with",
+    "and": "and",
+    "totalMatches": "{count, plural, =1 {# match} other {# matches}} total",
+    "noFilterResults": "No matches in this category",
+    "startConversation": "Start a conversation!",
+    "startConversationHint": "Tap on a new match above to say hi and start chatting.",
     "empty": {
       "title": "No matches yet",
-      "subtitle": "Keep swiping to find your matches!",
-      "discover": "Discover Pets"
+      "description": "When you and another pet owner both like each other's pets, you'll see your matches here.",
+      "cta": "Start discovering"
+    },
+    "noResults": {
+      "title": "No results found",
+      "description": "No matches found for \"{query}\""
+    },
+    "error": {
+      "title": "Something went wrong",
+      "description": "We couldn't load your matches. Please try again.",
+      "retry": "Retry"
     },
     "matchCard": {
       "title": "You have a match!"
-    }
+    },
+    "conversationNotReady": "Conversation not ready yet"
   },
   "notifications": {
     "title": "Notifications",
-    "empty": "No notifications yet",
-    "loading": "Loading...",
-    "markAllRead": "Mark all as read",
+    "loading": "Loading notifications...",
+    "loadingMore": "Loading more...",
+    "loadMore": "Load more",
+    "markAllAsRead": "Mark all as read",
     "viewAll": "View all notifications",
+    "unreadCount": "{count} unread",
+    "endOfList": "You're all caught up!",
+    "status": {
+      "live": "Live",
+      "offline": "Offline"
+    },
+    "empty": {
+      "title": "No notifications yet",
+      "subtitle": "When you get likes, matches, or messages, they will appear here.",
+      "cta": "Start discovering pets"
+    },
     "types": {
       "match": "New Match",
       "like": "New Like",
       "message": "New Message",
+      "pet_status": "Pet Update",
       "system": "System"
+    },
+    "actions": {
+      "viewMatch": "View match",
+      "openChat": "Open chat",
+      "viewPet": "View pet",
+      "managePet": "Manage pet",
+      "delete": "Delete notification"
+    },
+    "time": {
+      "justNow": "Just now",
+      "minutesAgo": "{count}m ago",
+      "hoursAgo": "{count}h ago",
+      "daysAgo": "{count}d ago"
     }
+  },
+  "chat": {
+    "messages": "Messages",
+    "searchPlaceholder": "Search by name...",
+    "noMessages": "No messages yet",
+    "noMessagesDescription": "When you match with someone, you can start chatting here.",
+    "goToMatches": "Go to Matches",
+    "noResults": "No results found",
+    "sayHi": "Say hi!",
+    "loadMore": "Load more",
+    "loadOlder": "Load older messages",
+    "loading": "Loading...",
+    "typeMessage": "Type a message...",
+    "send": "Send",
+    "sending": "Sending...",
+    "sent": "Sent",
+    "delivered": "Delivered",
+    "read": "Read",
+    "failedRetry": "Failed. Tap to retry",
+    "startConversation": "Start the conversation!",
+    "conversationNotFound": "Conversation not found",
+    "backToMessages": "Back to Messages",
+    "back": "Back",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "openChat": "Open chat",
+    "chattingAs": "Chatting as {name}",
+    "chatContext": "{myPet} and {otherPet}",
+    "switchContext": "Switch context",
+    "contextCount": "{count} pet pairs",
+    "inputHint": "Enter to send · Shift+Enter for new line",
+    "typing": "{name} is typing...",
+    "connected": "Connected",
+    "disconnected": "Disconnected"
+  },
+  "activePet": {
+    "browsingAs": "Browsing as {name}",
+    "browsingAsLabel": "Browsing as",
+    "selectPet": "Select a pet",
+    "choosePetTitle": "Choose a pet to continue",
+    "choosePetDescription": "Select which pet you want to browse and swipe as.",
+    "addPet": "Add a new pet",
+    "inactive": "Inactive",
+    "rememberChoice": "Remember my choice",
+    "noActivePetsTitle": "No active pets",
+    "noActivePetsDescription": "Activate one of your pets to start discovering matches.",
+    "noPetsTitle": "No pets yet",
+    "noPetsDescription": "Add your first pet to start discovering matches.",
+    "switchTo": "Switch to {name}",
+    "matchFor": "Match for {name}",
+    "matchContext": "{myPet} x {otherPet}"
+  },
+  "dating": {
+    "title": "Dating mode",
+    "sameSexBody": "We love all kinds of connections. This pet is the same sex as yours - do you want to continue with Dating, or send a Like instead?",
+    "continueDating": "Continue Dating",
+    "sendLike": "Send Like",
+    "dontShowAgain": "Don't show again"
+  },
+  "matchIntent": {
+    "social": "Social",
+    "mixed": "Mixed",
+    "dating": "Dating"
+  },
+  "general": {
+    "conversationNotReady": "Conversation not ready yet",
+    "retry": "Retry",
+    "viewProfile": "View profile",
+    "openChat": "Open chat",
+    "multiContext": "Multi-context",
+    "switchContext": "Switch context",
+    "contextSwitchedTo": "Context switched to {context}"
   }
 }

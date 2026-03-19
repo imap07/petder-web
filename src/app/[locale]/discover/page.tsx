@@ -1,18 +1,30 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { useAuth } from '@/contexts';
+import { useAuth, useActivePet } from '@/contexts';
 import { api } from '@/lib';
 import { ProtectedRoute } from '@/components/auth';
 import { Button } from '@/components/ui';
-import { SwipeableCard, MatchCelebration } from '@/components/discover';
-import type { Pet } from '@/types';
+import { SwipeableCard, MatchCelebration, DatingSameSexModal } from '@/components/discover';
+import type { Pet, SwipeAction } from '@/types';
 
 function DiscoverContent() {
   const t = useTranslations('discover');
+  const tActivePet = useTranslations('activePet');
   const { token } = useAuth();
+  const { 
+    activePetId, 
+    activePet,
+    activePets, 
+    isLoadingPets, 
+    requiresSelection,
+    openPetPicker,
+    isDatingSameSexDismissed,
+    dismissDatingSameSexNudge,
+    handleApiError,
+  } = useActivePet();
 
   const [pets, setPets] = useState<Pet[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -27,54 +39,83 @@ function DiscoverContent() {
   // History for undo functionality
   const [swipeHistory, setSwipeHistory] = useState<Pet[]>([]);
   const [isUndoing, setIsUndoing] = useState(false);
+  
+  // Track the active pet ID that was used to load the current feed
+  const loadedForPetIdRef = useRef<string | null>(null);
+
+  // Dating same-sex modal state
+  const [showDatingSameSexModal, setShowDatingSameSexModal] = useState(false);
+  const [pendingDatingPet, setPendingDatingPet] = useState<Pet | null>(null);
 
   const loadDiscoveryFeed = useCallback(async () => {
     if (!token) return;
+    
+    // Don't load if we don't have an active pet selected
+    if (!activePetId) {
+      setIsLoading(false);
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
 
     try {
-      // First check if user has pets
-      const myPets = await api.pets.getMyPets(token);
-      if (myPets.length === 0) {
-        setHasNoPets(true);
-        setIsLoading(false);
-        return;
-      }
-
-      // Load discovery feed
-      const discoveryPets = await api.discovery.getFeed(token, 20);
+      // Load discovery feed with active pet context
+      const discoveryPets = await api.discovery.getFeed(token, activePetId, 20);
       setPets(discoveryPets);
       setCurrentIndex(0);
       setCardKey(prev => prev + 1);
       setSwipeHistory([]); // Reset history on new load
-    } catch (err) {
+      loadedForPetIdRef.current = activePetId;
+    } catch (err: unknown) {
       console.error('Failed to load discovery feed:', err);
-      setError(t('empty.subtitle'));
+      // Check if it's an ACTIVE_PET_REQUIRED error
+      if (!handleApiError(err)) {
+        setError(t('empty.subtitle'));
+      }
     } finally {
       setIsLoading(false);
     }
-  }, [token, t]);
+  }, [token, activePetId, t, handleApiError]);
 
+  // Load feed when active pet changes
   useEffect(() => {
-    loadDiscoveryFeed();
-  }, [loadDiscoveryFeed]);
+    if (!isLoadingPets && activePetId && activePetId !== loadedForPetIdRef.current) {
+      loadDiscoveryFeed();
+    }
+  }, [isLoadingPets, activePetId, loadDiscoveryFeed]);
+  
+  // Check if user has no pets at all
+  useEffect(() => {
+    if (!isLoadingPets && activePets.length === 0) {
+      setHasNoPets(true);
+      setIsLoading(false);
+    } else if (!isLoadingPets && activePets.length > 0) {
+      setHasNoPets(false);
+    }
+  }, [isLoadingPets, activePets.length]);
+  
+  // Open pet picker if selection is required
+  useEffect(() => {
+    if (requiresSelection && !isLoadingPets) {
+      openPetPicker();
+    }
+  }, [requiresSelection, isLoadingPets, openPetPicker]);
 
-  const handleSwipe = useCallback(async (action: 'like' | 'pass') => {
-    if (!token || isSwiping || currentIndex >= pets.length) return;
+  // Execute the actual swipe API call
+  const executeSwipe = useCallback(async (targetPet: Pet, action: SwipeAction) => {
+    if (!token || !activePetId) return;
 
-    const currentPet = pets[currentIndex];
     setIsSwiping(true);
 
     try {
-      const response = await api.swipes.swipe(token, {
-        toPetId: currentPet.id,
+      const response = await api.swipes.swipe(token, activePetId, {
+        toPetId: targetPet.id,
         action,
       });
 
       // Add to history for undo
-      setSwipeHistory(prev => [...prev, currentPet]);
+      setSwipeHistory(prev => [...prev, targetPet]);
 
       // Move to next pet
       setCurrentIndex((prev) => prev + 1);
@@ -82,25 +123,75 @@ function DiscoverContent() {
 
       // Show match modal if it's a match
       if (response.matchCreated) {
-        setMatchedPet(currentPet);
+        setMatchedPet(targetPet);
         setTimeout(() => {
           setShowMatchModal(true);
         }, 300);
       }
     } catch (err) {
       console.error('Failed to swipe:', err);
+      handleApiError(err);
     } finally {
       setIsSwiping(false);
     }
-  }, [token, isSwiping, currentIndex, pets]);
+  }, [token, activePetId, handleApiError]);
+
+  const handleSwipe = useCallback(async (action: SwipeAction) => {
+    if (!token || !activePetId || isSwiping || currentIndex >= pets.length) return;
+
+    const currentPet = pets[currentIndex];
+
+    // Check for dating same-sex nudge
+    if (action === 'dating' && !isDatingSameSexDismissed()) {
+      const activePetSex = activePet?.sex;
+      const targetPetSex = currentPet.sex;
+      
+      // Show nudge if both sexes are known and equal (excluding 'unknown')
+      if (activePetSex && targetPetSex && 
+          activePetSex !== 'unknown' && targetPetSex !== 'unknown' &&
+          activePetSex === targetPetSex) {
+        setPendingDatingPet(currentPet);
+        setShowDatingSameSexModal(true);
+        return;
+      }
+    }
+
+    await executeSwipe(currentPet, action);
+  }, [token, activePetId, isSwiping, currentIndex, pets, activePet?.sex, isDatingSameSexDismissed, executeSwipe]);
+
+  // Handle dating same-sex modal actions
+  const handleContinueDating = useCallback(async () => {
+    setShowDatingSameSexModal(false);
+    if (pendingDatingPet) {
+      await executeSwipe(pendingDatingPet, 'dating');
+      setPendingDatingPet(null);
+    }
+  }, [pendingDatingPet, executeSwipe]);
+
+  const handleSendLikeInstead = useCallback(async () => {
+    setShowDatingSameSexModal(false);
+    if (pendingDatingPet) {
+      await executeSwipe(pendingDatingPet, 'like');
+      setPendingDatingPet(null);
+    }
+  }, [pendingDatingPet, executeSwipe]);
+
+  const handleDismissDatingSameSex = useCallback(() => {
+    dismissDatingSameSexNudge();
+  }, [dismissDatingSameSexNudge]);
+
+  const handleCloseDatingSameSexModal = useCallback(() => {
+    setShowDatingSameSexModal(false);
+    setPendingDatingPet(null);
+  }, []);
 
   const handleUndo = useCallback(async () => {
-    if (!token || isUndoing || swipeHistory.length === 0) return;
+    if (!token || !activePetId || isUndoing || swipeHistory.length === 0) return;
 
     setIsUndoing(true);
 
     try {
-      const response = await api.swipes.undo(token);
+      const response = await api.swipes.undo(token, activePetId);
 
       if (response.success && response.undoneSwipePetId) {
         // Find the pet we just undid in history
@@ -128,7 +219,7 @@ function DiscoverContent() {
     } finally {
       setIsUndoing(false);
     }
-  }, [token, isUndoing, swipeHistory, currentIndex]);
+  }, [token, activePetId, isUndoing, swipeHistory, currentIndex]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -139,6 +230,9 @@ function DiscoverContent() {
         handleSwipe('pass');
       } else if (e.key === 'ArrowRight' && currentIndex < pets.length) {
         handleSwipe('like');
+      } else if (e.key === 'ArrowUp' && currentIndex < pets.length) {
+        // Arrow Up for dating (romantic interest)
+        handleSwipe('dating');
       } else if ((e.key === 'z' || e.key === 'Z') && (e.ctrlKey || e.metaKey)) {
         // Ctrl+Z or Cmd+Z for undo
         e.preventDefault();
@@ -167,7 +261,7 @@ function DiscoverContent() {
   const canUndo = swipeHistory.length > 0 && !isUndoing;
 
   // Loading state with beautiful animation
-  if (isLoading) {
+  if (isLoading || isLoadingPets) {
     return (
       <div className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-background">
         <div className="text-center">
@@ -257,7 +351,11 @@ function DiscoverContent() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex-1">
             <h1 className="text-2xl font-bold text-text">{t('title')}</h1>
-            <p className="text-text-muted text-sm">{t('subtitle')}</p>
+            {activePet && (
+              <p className="text-text-muted text-sm">
+                {tActivePet('browsingAs', { name: activePet.name })}
+              </p>
+            )}
           </div>
 
           {/* Undo Button */}
@@ -307,6 +405,7 @@ function DiscoverContent() {
               pet={currentPet}
               onLike={() => handleSwipe('like')}
               onPass={() => handleSwipe('pass')}
+              onDating={() => handleSwipe('dating')}
               isLoading={isSwiping}
             />
           </div>
@@ -327,6 +426,15 @@ function DiscoverContent() {
         onClose={handleMatchClose}
         petName={matchedPet?.name}
         petPhoto={matchedPet?.photos?.[0]}
+      />
+
+      {/* Dating Same-Sex Nudge Modal */}
+      <DatingSameSexModal
+        isOpen={showDatingSameSexModal}
+        onClose={handleCloseDatingSameSexModal}
+        onContinueDating={handleContinueDating}
+        onSendLike={handleSendLikeInstead}
+        onDismissPermanently={handleDismissDatingSameSex}
       />
     </div>
   );
